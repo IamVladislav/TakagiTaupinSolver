@@ -13,6 +13,8 @@ class SystemReplacment{
 public:
     double xc, yc, zc;
     double xcinv, ycinv, zcinv;
+    virtual void Basis(double x, double y, double z) = 0;
+    virtual void BasisInverse(double x, double y, double z) = 0;
 };
 
 class RotationMatrixZ: public SystemReplacment{
@@ -21,15 +23,15 @@ public:
     RotationMatrixZ(double phi){
         this->phi=phi;
     }
-    /*double xc(double x, double y, double z){
-        double xcv;
-        xcv=x*cos(phi);
-        return xcv;
-    }*/
-    void Basis(double x, double y, double z){//mock
-        xc=3;
-        yc=3;
-        zc=5;
+    void Basis(double x, double y, double z) override {
+        xc=x*cos(phi)+y*sin(phi);
+        yc=-x*sin(phi)+y*cos(phi);
+        zc=z;
+    }
+    void BasisInverse(double x, double y, double z) override {
+        xcinv=x*cos(phi)-y*sin(phi);
+        ycinv=x*sin(phi)+y*cos(phi);
+        zcinv=z;
     }
 };
 
