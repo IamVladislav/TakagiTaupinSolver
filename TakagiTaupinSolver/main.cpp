@@ -36,43 +36,17 @@ public:
 
 class DisplacmentGradient{
 public:
+    virtual ~DisplacmentGradient(){}
     double uxx,uxy,uxz,uyx,uyy,uyz,uzx,uzy,uzz;
-    virtual double uxxcalc(double x, double y, double z)
-    {
-        return uxz;
-    }
-    virtual double uxycalc(double x, double y, double z)
-    {
-        return uxz;
-    }
-    virtual double uxzcalc(double x, double y, double z)
-    {
-        return uxz;
-    }
-    virtual double uyxcalc(double x, double y, double z)
-    {
-        return uxz;
-    }
-    virtual double uyycalc(double x, double y, double z)
-    {
-        return uxz;
-    }
-    virtual double uyzcalc(double x, double y, double z)
-    {
-        return uxz;
-    }
-    virtual double uzxcalc(double x, double y, double z)
-    {
-        return uxz;
-    }
-    virtual double uzycalc(double x, double y, double z)
-    {
-        return uxz;
-    }
-    virtual double uzzcalc(double x, double y, double z)
-    {
-        return uxz;
-    }
+    virtual double uxxcalc(double x, double y, double z) = 0;
+    virtual double uxycalc(double x, double y, double z) = 0;
+    virtual double uxzcalc(double x, double y, double z) = 0;
+    virtual double uyxcalc(double x, double y, double z) = 0;
+    virtual double uyycalc(double x, double y, double z) = 0;
+    virtual double uyzcalc(double x, double y, double z) = 0;
+    virtual double uzxcalc(double x, double y, double z) = 0;
+    virtual double uzycalc(double x, double y, double z) = 0;
+    virtual double uzzcalc(double x, double y, double z) = 0;
 };
 
 class TestDisp: public DisplacmentGradient{
@@ -126,26 +100,23 @@ public:
 
 class DisplacmentGradientSystemReplace: public virtual DisplacmentGradient{
 public:
-    DisplacmentGradient displacment;
     RotationMatrixZ *rotate;
-    double l;//mock
-    DisplacmentGradientSystemReplace(double bu, double h, double nu, DisplacmentGradient obj)//mock
+    DisplacmentGradient *displacment;
+    double l;
+    DisplacmentGradientSystemReplace(double bu, double h, double nu, DisplacmentGradient& obj)//mock
     {
-        displacment=obj;
         rotate = new RotationMatrixZ(l);
-        std::cout<<obj.uxx<<std::endl;
-        std::cout<<displacment.uxx<<std::endl;
-        std::cout<<obj.uxxcalc(1, 1, 1)<<std::endl;
+        displacment=&obj;
     }
     double uxxcalc(double x, double y, double z) override
     {
         rotate->Basis(x,y,z);
-        uxx=displacment.uxxcalc(rotate->xc, rotate->yc, rotate->zc)*cos(l)*cos(l) - displacment.uxycalc(rotate->xc, rotate->yc, rotate->zc)*cos(l)*sin(l) - displacment.uyxcalc(rotate->xc, rotate->yc, rotate->zc)*cos(l)*sin(l) + displacment.uyycalc(rotate->xc, rotate->yc, rotate->zc)*sin(l)*sin(l);
+        uxx=displacment->uxxcalc(rotate->xc, rotate->yc, rotate->zc)*cos(l)*cos(l) - displacment->uxycalc(rotate->xc, rotate->yc, rotate->zc)*cos(l)*sin(l) - displacment->uyxcalc(rotate->xc, rotate->yc, rotate->zc)*cos(l)*sin(l) + displacment->uyycalc(rotate->xc, rotate->yc, rotate->zc)*sin(l)*sin(l);
         return uxx;
     }
     double uxycalc(double x, double y, double z) override
     {
-        uxy=displacment.uxxcalc(rotate->xc, rotate->yc, rotate->zc);//mock
+        uxy=displacment->uxxcalc(rotate->xc, rotate->yc, rotate->zc);//mock
         return uxy;
     }
     double uxzcalc(double x, double y, double z) override
@@ -192,6 +163,6 @@ int main(int argc, const char * argv[]) {
     RotationMatrixZ t(10);
     //std::cout<<t.Test()<<std::endl;
     DisplacmentGradientSystemReplace obj(1, 1, 1, p);
-    //std::cout<<obj.uxycalc(1, 1, 1)<<std::endl;
+    std::cout<<obj.uxycalc(1, 1, 1)<<std::endl;
     return 0;
 }
