@@ -8,19 +8,21 @@
 
 #include <iostream>
 #include <cmath>
+#include <vector>
+#include "Vector_And_Operations.hpp"
 
-class SystemReplacment{
+class System_Replacment{
 public:
     double xc, yc, zc;
     double xcinv, ycinv, zcinv;
     virtual void Basis(double x, double y, double z) = 0;
-    virtual void BasisInverse(double x, double y, double z) = 0;
+    virtual void Basis_Inverse(double x, double y, double z) = 0;
 };
 
-class RotationMatrixZ: public SystemReplacment{
+class Rotation_Matrix_Z: public System_Replacment{
 public:
     double phi;
-    RotationMatrixZ(double phi){
+    Rotation_Matrix_Z(double phi){
         this->phi=phi;
     }
     void Basis(double x, double y, double z) override {
@@ -28,7 +30,7 @@ public:
         yc=-x*sin(phi)+y*cos(phi);
         zc=z;
     }
-    void BasisInverse(double x, double y, double z) override {
+    void Basis_Inverse(double x, double y, double z) override {
         xcinv=x*cos(phi)-y*sin(phi);
         ycinv=x*sin(phi)+y*cos(phi);
         zcinv=z;
@@ -102,12 +104,12 @@ public:
 
 class DisplacmentGradientSystemReplace: public virtual DisplacmentGradient{
 public:
-    RotationMatrixZ *rotate;
+    Rotation_Matrix_Z *rotate;
     DisplacmentGradient *displacment;
     double l;//mock
     DisplacmentGradientSystemReplace(double bu, double h, double nu, DisplacmentGradient& obj)//mock
     {
-        rotate = new RotationMatrixZ(l);
+        rotate = new Rotation_Matrix_Z(l);
         displacment=&obj;
         l=5;//mock
     }
@@ -159,13 +161,37 @@ public:
     }
 };
 
+class InitializationGeometry{
+public:
+    Vector<double> x_vector,y_vector,z_vector;
+    InitializationGeometry(Vector<int> diffraction_vector,Vector<int> normal_vector,std::vector <Vector<int>> direction_vector_list, Vector<int> burgers_vector, int nubmer_of_dislocation, double dislocation_depth){
+        y_vector=Vector_Multiplication(z_vector, x_vector);
+    }
+    void Third_Vector_Of_System(){//mock
+        y_vector.c[0]=1;
+    }
+    void Glide_Plane(){//mock
+        
+    }
+    void Exit_Point_Coordinate(){//mock
+        
+    }
+};
+
 int main(int argc, const char * argv[]) {
     TestDisp p;
     p.uxxcalc(1, 1, 1);
     //std::cout << p.uxx << std::endl;
-    RotationMatrixZ t(10);
+    Rotation_Matrix_Z t(10);
     //std::cout<<t.Test()<<std::endl;
     DisplacmentGradientSystemReplace obj(1, 1, 1, p);
     std::cout<<obj.uxxcalc(1, 1, 1)<<std::endl;
+    std::vector <Vector<int>> test;
+    Vector<int> test1;
+    test1.c[0]=1;
+    test1.c[1]=2;
+    test1.c[2]=3;
+    test.push_back(test1);
+    std::cout<<test[0].c[1]<<std::endl;
     return 0;
 }

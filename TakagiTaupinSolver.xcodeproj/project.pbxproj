@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C83D679421288E0000632623 /* Vector_And_Operations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C83D679221288E0000632623 /* Vector_And_Operations.cpp */; };
 		C8B4EAAF210DA87600D56735 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C8B4EAAE210DA87600D56735 /* main.cpp */; };
 /* End PBXBuildFile section */
 
@@ -23,6 +24,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		C83D679221288E0000632623 /* Vector_And_Operations.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Vector_And_Operations.cpp; sourceTree = "<group>"; };
+		C83D679321288E0000632623 /* Vector_And_Operations.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Vector_And_Operations.hpp; sourceTree = "<group>"; };
 		C8B4EAAB210DA87600D56735 /* TakagiTaupinSolver */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TakagiTaupinSolver; sourceTree = BUILT_PRODUCTS_DIR; };
 		C8B4EAAE210DA87600D56735 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -58,6 +61,8 @@
 			isa = PBXGroup;
 			children = (
 				C8B4EAAE210DA87600D56735 /* main.cpp */,
+				C83D679221288E0000632623 /* Vector_And_Operations.cpp */,
+				C83D679321288E0000632623 /* Vector_And_Operations.hpp */,
 			);
 			path = TakagiTaupinSolver;
 			sourceTree = "<group>";
@@ -118,6 +123,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C83D679421288E0000632623 /* Vector_And_Operations.cpp in Sources */,
 				C8B4EAAF210DA87600D56735 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
