@@ -161,10 +161,12 @@ public:
     }
 };
 
-class InitializationGeometry{
+class InitialisationGeometry{
 public:
     Vector<double> x_vector,y_vector,z_vector;
-    InitializationGeometry(Vector<int> diffraction_vector,Vector<int> normal_vector,std::vector <Vector<int>> direction_vector_list, Vector<int> burgers_vector, int nubmer_of_dislocation, double dislocation_depth){
+    InitialisationGeometry(Vector<int> diffraction_vector,Vector<int> normal_vector,std::vector <Vector<int>> direction_vector_list, Vector<int> burgers_vector, int nubmer_of_dislocation, double dislocation_depth){
+        x_vector=Vector_Normalization<int, double>(diffraction_vector);
+        z_vector=Vector_Normalization<int, double>(Vector_Inverse(normal_vector));
         y_vector=Vector_Multiplication(z_vector, x_vector);
     }
     void Third_Vector_Of_System(){//mock
@@ -189,9 +191,15 @@ int main(int argc, const char * argv[]) {
     std::vector <Vector<int>> test;
     Vector<int> test1;
     test1.c[0]=1;
-    test1.c[1]=2;
-    test1.c[2]=3;
+    test1.c[1]=0;
+    test1.c[2]=0;
+    Vector<int> test2;
+    test2.c[0]=0;
+    test2.c[1]=0;
+    test2.c[2]=-1;
     test.push_back(test1);
     std::cout<<test[0].c[1]<<std::endl;
+    InitialisationGeometry p_test(test1, test2, test, test1, 2, 2);
+    std::cout << p_test.y_vector << std::endl;
     return 0;
 }

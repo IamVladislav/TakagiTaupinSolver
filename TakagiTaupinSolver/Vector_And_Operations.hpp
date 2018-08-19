@@ -11,11 +11,16 @@
 
 #include <stdio.h>
 #include <cmath>
+#include <iostream>
 
 template <typename type> class Vector {
 public:
     type c[3];
 };
+
+template <typename type> std::ostream &operator<<(std::ostream &os, Vector<type> const &m) {
+    return os << "(" << m.c[0] << "," << m.c[1] << "," << m.c[2] << ")";
+}
 
 template <typename type_of_input> Vector<type_of_input> Vector_Multiplication(Vector<type_of_input> first_vector, Vector<type_of_input> second_vector){
     Vector<type_of_input> third_vector;
@@ -25,11 +30,21 @@ template <typename type_of_input> Vector<type_of_input> Vector_Multiplication(Ve
     return third_vector;
 }
 
-template <typename type_of_input,typename type_of_return> type_of_return Vector_Normalization(Vector<type_of_input> vector){
-    Vector<type_of_input> vector_normalize;
+template <typename type_of_input, typename type_of_return> Vector<type_of_return> Vector_Normalization(Vector<type_of_input> vector){
+    Vector<type_of_return> vector_normalize;
     double abs_vector=sqrt(vector.c[0]*vector.c[0]+vector.c[1]*vector.c[1]+vector.c[2]*vector.c[2]);
     vector_normalize.c[0]=vector.c[0]/abs_vector;
     vector_normalize.c[1]=vector.c[1]/abs_vector;
     vector_normalize.c[2]=vector.c[2]/abs_vector;
+    return vector_normalize;
 }
+
+template <typename type_of_input> Vector<type_of_input> Vector_Inverse(Vector<type_of_input> vector){
+    Vector<type_of_input> inverse_vector;
+    inverse_vector.c[0]=-vector.c[0];
+    inverse_vector.c[1]=-vector.c[1];
+    inverse_vector.c[2]=-vector.c[2];
+    return inverse_vector;
+}
+
 #endif /* Vector_And_Operations_hpp */
