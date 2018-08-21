@@ -163,17 +163,40 @@ public:
 
 class InitialisationGeometry{
 public:
-    Vector<double> x_vector,y_vector,z_vector;
+    Vector<double> x_vector,y_vector,z_vector, glide_plane_vector;
     InitialisationGeometry(Vector<int> diffraction_vector,Vector<int> normal_vector,std::vector <Vector<int>> direction_vector_list, Vector<int> burgers_vector, int nubmer_of_dislocation, double dislocation_depth){
         x_vector=Vector_Normalization<int, double>(diffraction_vector);
         z_vector=Vector_Normalization<int, double>(Vector_Inverse(normal_vector));
-        y_vector=Vector_Multiplication(z_vector, x_vector);
+        y_vector=Vector_Multiplication<double, double>(z_vector, x_vector);
+        try{
+        Glide_Plane(direction_vector_list);
+        }
+        catch (const char *str){
+            std::cout << str;
+        }
     }
-    void Third_Vector_Of_System(){//mock
-        y_vector.c[0]=1;
+    void Glide_Plane(std::vector <Vector<int>> direction_vector_list){//mock
+        switch (direction_vector_list.size()) {
+            case 0:
+                std::cerr<<"Can't calculate a glide plane, list is empty!"<<std::endl;
+                break;
+            case 1:
+                std::cerr<<"Can't calculate a glide plane, list has only one vector!"<<std::endl;
+                break;
+            default:
+                Glide_Plane_Calculate(direction_vector_list);
+                break;
+        }
     }
-    void Glide_Plane(){//mock
-        
+    void Glide_Plane_Calculate(std::vector <Vector<int>> direction_vector_list){//mock
+        Vector<double> comparison_vector;
+        for(int i=1;i<direction_vector_list.size();i++){
+            glide_plane_vector=Vector_Multiplication<int, double>(direction_vector_list[i-1], direction_vector_list[i]);
+            if (i!=1 and comparison_vector!=glide_plane_vector){
+                throw "This vectors haven't overall glide plane";
+            }
+            comparison_vector=glide_plane_vector;
+        }
     }
     void Exit_Point_Coordinate(){//mock
         
@@ -197,9 +220,15 @@ int main(int argc, const char * argv[]) {
     test2.c[0]=0;
     test2.c[1]=0;
     test2.c[2]=-1;
+    Vector<int> test3;
+    test3.c[0]=0;
+    test3.c[1]=0;
+    test3.c[2]=-1;
     test.push_back(test1);
-    std::cout<<test[0].c[1]<<std::endl;
+    test.push_back(test2);
+    test.push_back(test3);
+    //std::cout<<test[0].c[1]<<std::endl;
     InitialisationGeometry p_test(test1, test2, test, test1, 2, 2);
-    std::cout << p_test.y_vector << std::endl;
+    std::cout << p_test.glide_plane_vector << std::endl;
     return 0;
 }
