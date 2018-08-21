@@ -42,6 +42,7 @@ class DisplacmentGradient{
 public:
     virtual ~DisplacmentGradient(){}
     double uxx,uxy,uxz,uyx,uyy,uyz,uzx,uzy,uzz;
+    Vector<double> b;
     virtual double uxxcalc(double x, double y, double z) = 0;
     virtual double uxycalc(double x, double y, double z) = 0;
     virtual double uxzcalc(double x, double y, double z) = 0;
@@ -55,6 +56,11 @@ public:
 
 class TestDisp: public DisplacmentGradient{
 public:
+    TestDisp(){
+        b.c[0]=3;
+        b.c[1]=3;
+        b.c[2]=3;
+    }
     double uxxcalc(double x, double y, double z) override
     {
         uxx=10;
@@ -163,7 +169,7 @@ public:
 
 class InitialisationGeometry{
 public:
-    Vector<double> x_vector,y_vector,z_vector, glide_plane_vector;
+    Vector<double> x_vector,y_vector,z_vector, glide_plane_vector, b_vector;
     InitialisationGeometry(Vector<int> diffraction_vector,Vector<int> normal_vector,std::vector <Vector<int>> direction_vector_list, Vector<int> burgers_vector, int nubmer_of_dislocation, double dislocation_depth){
         x_vector=Vector_Normalization<int, double>(diffraction_vector);
         z_vector=Vector_Normalization<int, double>(Vector_Inverse(normal_vector));
@@ -174,6 +180,7 @@ public:
         catch (const char *str){
             std::cout << str;
         }
+        Burgers_Vector_Into_System_Coordinates(burgers_vector);
     }
     void Glide_Plane(std::vector <Vector<int>> direction_vector_list){//mock
         switch (direction_vector_list.size()) {
@@ -201,6 +208,11 @@ public:
     void Exit_Point_Coordinate(){//mock
         
     }
+    void Burgers_Vector_Into_System_Coordinates(Vector<int> b_initial){//not tested
+        b_vector.c[0]=-((-(b_initial.c[2]*y_vector.c[1]*z_vector.c[0]) + b_initial.c[1]*y_vector.c[2]*z_vector.c[0] + b_initial.c[2]*y_vector.c[0]*z_vector.c[1] - b_initial.c[0]*y_vector.c[2]*z_vector.c[1] - b_initial.c[1]*y_vector.c[0]*z_vector.c[2] + b_initial.c[0]*y_vector.c[1]*z_vector.c[2])/ (x_vector.c[2]*y_vector.c[1]*z_vector.c[0] - x_vector.c[1]*y_vector.c[2]*z_vector.c[0] - x_vector.c[2]*y_vector.c[0]*z_vector.c[1] + x_vector.c[0]*y_vector.c[2]*z_vector.c[1] + x_vector.c[1]*y_vector.c[0]*z_vector.c[2] - x_vector.c[0]*y_vector.c[1]*z_vector.c[2]));
+        b_vector.c[1]=-((b_initial.c[2]*x_vector.c[1]*z_vector.c[0] - b_initial.c[1]*x_vector.c[2]*z_vector.c[0] - b_initial.c[2]*x_vector.c[0]*z_vector.c[1] + b_initial.c[0]*x_vector.c[2]*z_vector.c[1] + b_initial.c[1]*x_vector.c[0]*z_vector.c[2] - b_initial.c[0]*x_vector.c[1]*z_vector.c[2])/(x_vector.c[2]* y_vector.c[1]*z_vector.c[0] - x_vector.c[1]*y_vector.c[2]*z_vector.c[0] - x_vector.c[2]*y_vector.c[0]*z_vector.c[1] + x_vector.c[0]*y_vector.c[2]*z_vector.c[1] + x_vector.c[1]*y_vector.c[0]*z_vector.c[2] - x_vector.c[0]*y_vector.c[1]*z_vector.c[2]));
+        b_vector.c[2]=-((b_initial.c[2]*x_vector.c[1]*y_vector.c[0] - b_initial.c[1]*x_vector.c[2]*y_vector.c[0] - b_initial.c[2]*x_vector.c[0]*y_vector.c[1] + b_initial.c[0]*x_vector.c[2]*y_vector.c[1] + b_initial.c[1]*x_vector.c[0]*y_vector.c[2] - b_initial.c[0]*x_vector.c[1]* y_vector.c[2])/(-(x_vector.c[2]*y_vector.c[1]*z_vector.c[0]) + x_vector.c[1]*y_vector.c[2]*z_vector.c[0] + x_vector.c[2]*y_vector.c[0]*z_vector.c[1] - x_vector.c[0]*y_vector.c[2]*z_vector.c[1] - x_vector.c[1]*y_vector.c[0]*z_vector.c[2] + x_vector.c[0]*y_vector.c[1]*z_vector.c[2]));
+    }
 };
 
 int main(int argc, const char * argv[]) {
@@ -212,23 +224,23 @@ int main(int argc, const char * argv[]) {
     DisplacmentGradientSystemReplace obj(1, 1, 1, p);
     std::cout<<obj.uxxcalc(1, 1, 1)<<std::endl;
     std::vector <Vector<int>> test;
-    Vector<int> test1;
-    test1.c[0]=1;
-    test1.c[1]=0;
-    test1.c[2]=0;
-    Vector<int> test2;
-    test2.c[0]=0;
-    test2.c[1]=0;
-    test2.c[2]=-1;
-    Vector<int> test3;
-    test3.c[0]=0;
-    test3.c[1]=0;
-    test3.c[2]=-1;
-    test.push_back(test1);
-    test.push_back(test2);
-    test.push_back(test3);
-    //std::cout<<test[0].c[1]<<std::endl;
-    InitialisationGeometry p_test(test1, test2, test, test1, 2, 2);
-    std::cout << p_test.glide_plane_vector << std::endl;
+    Vector<int> diffraction_vector;
+    diffraction_vector.c[0]=1;
+    diffraction_vector.c[1]=0;
+    diffraction_vector.c[2]=0;
+    Vector<int> normal_vector;
+    normal_vector.c[0]=0;
+    normal_vector.c[1]=0;
+    normal_vector.c[2]=-1;
+    Vector<int> burgers_vector;
+    burgers_vector.c[0]=1;
+    burgers_vector.c[1]=1;
+    burgers_vector.c[2]=1;
+    test.push_back(diffraction_vector);
+    test.push_back(normal_vector);
+    test.push_back(burgers_vector);
+    InitialisationGeometry p_test(diffraction_vector, normal_vector, test, burgers_vector, 2, 2);
+    //std::cout << p_test.glide_plane_vector << std::endl;
+    std::cout << p_test.b_vector << std::endl;
     return 0;
 }
