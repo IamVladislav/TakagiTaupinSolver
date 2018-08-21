@@ -182,7 +182,7 @@ public:
         }
         Burgers_Vector_Into_System_Coordinates(burgers_vector);
     }
-    void Glide_Plane(std::vector <Vector<int>> direction_vector_list){//mock
+    void Glide_Plane(std::vector <Vector<int>> direction_vector_list){//not tested
         switch (direction_vector_list.size()) {
             case 0:
                 std::cerr<<"Can't calculate a glide plane, list is empty!"<<std::endl;
@@ -195,7 +195,7 @@ public:
                 break;
         }
     }
-    void Glide_Plane_Calculate(std::vector <Vector<int>> direction_vector_list){//mock
+    void Glide_Plane_Calculate(std::vector <Vector<int>> direction_vector_list){//not tested
         Vector<double> comparison_vector;
         for(int i=1;i<direction_vector_list.size();i++){
             glide_plane_vector=Vector_Multiplication<int, double>(direction_vector_list[i-1], direction_vector_list[i]);
