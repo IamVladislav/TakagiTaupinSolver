@@ -185,6 +185,7 @@ public:
         }
         Burgers_Vector_Into_System_Coordinates(burgers_vector);
         this->dislocation_depth=dislocation_depth;
+        Angle_Between_Dislocation_Axis_And_Calculation_Axis(direction_vector_list);
     }
     void Glide_Plane(std::vector <Vector<double>> direction_vector_list){//not tested
         switch (direction_vector_list.size()) {
@@ -230,8 +231,8 @@ public:
         {
             Vector <double> vector_normal_tayz=Vector_Multiplication<double, double>(direction_vector_list[i], z_vector);
             Vector <double> vector_normal_xz=Vector_Multiplication<double, double>(x_vector, z_vector);
-            phi_calculate=Scalar_Multiplication(vector_normal_tayz, vector_normal_xz)/(Vector_Absolute_Value(vector_normal_xz)*Vector_Absolute_Value(vector_normal_tayz));
-            kappa_calculate=Scalar_Multiplication(z_vector, direction_vector_list[i])/(Vector_Absolute_Value(z_vector)*Vector_Absolute_Value(direction_vector_list[i]));
+            phi_calculate=acos(Scalar_Multiplication(vector_normal_tayz, vector_normal_xz)/(Vector_Absolute_Value(vector_normal_xz)*Vector_Absolute_Value(vector_normal_tayz)));
+            kappa_calculate=acos(Scalar_Multiplication(z_vector, direction_vector_list[i])/(Vector_Absolute_Value(z_vector)*Vector_Absolute_Value(direction_vector_list[i])));
             kappa.push_back(kappa_calculate);
             phi.push_back(phi_calculate);
         }
@@ -245,7 +246,7 @@ int main(int argc, const char * argv[]) {
     Rotation_Matrix_Z t(10);
     //std::cout<<t.Test()<<std::endl;
     DisplacmentGradientSystemReplace obj(1, 1, 1, p);
-    std::cout<<obj.uxxcalc(1, 1, 1)<<std::endl;
+    //std::cout<<obj.uxxcalc(1, 1, 1)<<std::endl;
     std::vector <Vector<double>> test;
     Vector<double> diffraction_vector;
     diffraction_vector.c[0]=1;
@@ -256,7 +257,7 @@ int main(int argc, const char * argv[]) {
     normal_vector.c[1]=0;
     normal_vector.c[2]=-1;
     Vector<double> burgers_vector;
-    burgers_vector.c[0]=1;
+    burgers_vector.c[0]=0;
     burgers_vector.c[1]=1;
     burgers_vector.c[2]=1;
     test.push_back(diffraction_vector);
@@ -264,6 +265,7 @@ int main(int argc, const char * argv[]) {
     test.push_back(burgers_vector);
     InitialisationGeometry p_test(diffraction_vector, normal_vector, test, burgers_vector, 2, 2);
     //std::cout << p_test.glide_plane_vector << std::endl;
-    std::cout << p_test.b_vector << std::endl;
+    std::cout<<std::endl;
+    std::cout << p_test.phi[2] << std::endl;
     return 0;
 }
