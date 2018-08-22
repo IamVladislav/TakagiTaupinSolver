@@ -170,9 +170,12 @@ public:
 class InitialisationGeometry{
 public:
     Vector<double> x_vector,y_vector,z_vector, glide_plane_vector, b_vector;
-    InitialisationGeometry(Vector<int> diffraction_vector,Vector<int> normal_vector,std::vector <Vector<int>> direction_vector_list, Vector<int> burgers_vector, int nubmer_of_dislocation, double dislocation_depth){
-        x_vector=Vector_Normalization<int, double>(diffraction_vector);
-        z_vector=Vector_Normalization<int, double>(Vector_Inverse(normal_vector));
+    std::vector <double> kappa, phi;
+    std::vector <Vector<double>> exit_point;
+    double dislocation_depth;
+    InitialisationGeometry(Vector<double> diffraction_vector,Vector<double> normal_vector,std::vector <Vector<double>> direction_vector_list, Vector<double> burgers_vector, int nubmer_of_dislocation, double dislocation_depth){
+        x_vector=Vector_Normalization<double, double>(diffraction_vector);
+        z_vector=Vector_Normalization<double, double>(Vector_Inverse(normal_vector));
         y_vector=Vector_Multiplication<double, double>(z_vector, x_vector);
         try{
         Glide_Plane(direction_vector_list);
@@ -181,8 +184,9 @@ public:
             std::cout << str;
         }
         Burgers_Vector_Into_System_Coordinates(burgers_vector);
+        this->dislocation_depth=dislocation_depth;
     }
-    void Glide_Plane(std::vector <Vector<int>> direction_vector_list){//not tested
+    void Glide_Plane(std::vector <Vector<double>> direction_vector_list){//not tested
         switch (direction_vector_list.size()) {
             case 0:
                 std::cerr<<"Can't calculate a glide plane, list is empty!"<<std::endl;
@@ -195,23 +199,42 @@ public:
                 break;
         }
     }
-    void Glide_Plane_Calculate(std::vector <Vector<int>> direction_vector_list){//not tested
+    void Glide_Plane_Calculate(std::vector <Vector<double>> direction_vector_list){//not tested
         Vector<double> comparison_vector;
         for(int i=1;i<direction_vector_list.size();i++){
-            glide_plane_vector=Vector_Multiplication<int, double>(direction_vector_list[i-1], direction_vector_list[i]);
+            glide_plane_vector=Vector_Multiplication<double, double>(direction_vector_list[i-1], direction_vector_list[i]);
             if (i!=1 and comparison_vector!=glide_plane_vector){
                 throw "This vectors haven't overall glide plane";
             }
             comparison_vector=glide_plane_vector;
         }
     }
-    void Exit_Point_Coordinate(){//mock
-        
+    void Exit_Point_Coordinate(std::vector <Vector<double>> direction_vector_list){//TODO: Add a if-else for 1/0 exception
+        Vector<double> exit_point_calculation;
+        for(int i=0;i<direction_vector_list.size();i++)
+        {
+            exit_point_calculation.c[2]=dislocation_depth;
+            exit_point_calculation.c[0]=dislocation_depth/tan(kappa[i])*cos(phi[i]);
+            exit_point_calculation.c[1]=dislocation_depth/tan(kappa[i])*sin(phi[i]);
+            exit_point.push_back(exit_point_calculation);
+        }
     }
-    void Burgers_Vector_Into_System_Coordinates(Vector<int> b_initial){//not tested
+    void Burgers_Vector_Into_System_Coordinates(Vector<double> b_initial){//not tested
         b_vector.c[0]=-((-(b_initial.c[2]*y_vector.c[1]*z_vector.c[0]) + b_initial.c[1]*y_vector.c[2]*z_vector.c[0] + b_initial.c[2]*y_vector.c[0]*z_vector.c[1] - b_initial.c[0]*y_vector.c[2]*z_vector.c[1] - b_initial.c[1]*y_vector.c[0]*z_vector.c[2] + b_initial.c[0]*y_vector.c[1]*z_vector.c[2])/ (x_vector.c[2]*y_vector.c[1]*z_vector.c[0] - x_vector.c[1]*y_vector.c[2]*z_vector.c[0] - x_vector.c[2]*y_vector.c[0]*z_vector.c[1] + x_vector.c[0]*y_vector.c[2]*z_vector.c[1] + x_vector.c[1]*y_vector.c[0]*z_vector.c[2] - x_vector.c[0]*y_vector.c[1]*z_vector.c[2]));
         b_vector.c[1]=-((b_initial.c[2]*x_vector.c[1]*z_vector.c[0] - b_initial.c[1]*x_vector.c[2]*z_vector.c[0] - b_initial.c[2]*x_vector.c[0]*z_vector.c[1] + b_initial.c[0]*x_vector.c[2]*z_vector.c[1] + b_initial.c[1]*x_vector.c[0]*z_vector.c[2] - b_initial.c[0]*x_vector.c[1]*z_vector.c[2])/(x_vector.c[2]* y_vector.c[1]*z_vector.c[0] - x_vector.c[1]*y_vector.c[2]*z_vector.c[0] - x_vector.c[2]*y_vector.c[0]*z_vector.c[1] + x_vector.c[0]*y_vector.c[2]*z_vector.c[1] + x_vector.c[1]*y_vector.c[0]*z_vector.c[2] - x_vector.c[0]*y_vector.c[1]*z_vector.c[2]));
         b_vector.c[2]=-((b_initial.c[2]*x_vector.c[1]*y_vector.c[0] - b_initial.c[1]*x_vector.c[2]*y_vector.c[0] - b_initial.c[2]*x_vector.c[0]*y_vector.c[1] + b_initial.c[0]*x_vector.c[2]*y_vector.c[1] + b_initial.c[1]*x_vector.c[0]*y_vector.c[2] - b_initial.c[0]*x_vector.c[1]* y_vector.c[2])/(-(x_vector.c[2]*y_vector.c[1]*z_vector.c[0]) + x_vector.c[1]*y_vector.c[2]*z_vector.c[0] + x_vector.c[2]*y_vector.c[0]*z_vector.c[1] - x_vector.c[0]*y_vector.c[2]*z_vector.c[1] - x_vector.c[1]*y_vector.c[0]*z_vector.c[2] + x_vector.c[0]*y_vector.c[1]*z_vector.c[2]));
+    }
+    void Angle_Between_Dislocation_Axis_And_Calculation_Axis(std::vector <Vector<double>> direction_vector_list){//TODO: find case and solution, if tay and phi more than pi, what;s happend?
+        double kappa_calculate,phi_calculate;
+        for(int i=0;i<direction_vector_list.size();i++)
+        {
+            Vector <double> vector_normal_tayz=Vector_Multiplication<double, double>(direction_vector_list[i], z_vector);
+            Vector <double> vector_normal_xz=Vector_Multiplication<double, double>(x_vector, z_vector);
+            phi_calculate=Scalar_Multiplication(vector_normal_tayz, vector_normal_xz)/(Vector_Absolute_Value(vector_normal_xz)*Vector_Absolute_Value(vector_normal_tayz));
+            kappa_calculate=Scalar_Multiplication(z_vector, direction_vector_list[i])/(Vector_Absolute_Value(z_vector)*Vector_Absolute_Value(direction_vector_list[i]));
+            kappa.push_back(kappa_calculate);
+            phi.push_back(phi_calculate);
+        }
     }
 };
 
@@ -223,16 +246,16 @@ int main(int argc, const char * argv[]) {
     //std::cout<<t.Test()<<std::endl;
     DisplacmentGradientSystemReplace obj(1, 1, 1, p);
     std::cout<<obj.uxxcalc(1, 1, 1)<<std::endl;
-    std::vector <Vector<int>> test;
-    Vector<int> diffraction_vector;
+    std::vector <Vector<double>> test;
+    Vector<double> diffraction_vector;
     diffraction_vector.c[0]=1;
     diffraction_vector.c[1]=0;
     diffraction_vector.c[2]=0;
-    Vector<int> normal_vector;
+    Vector<double> normal_vector;
     normal_vector.c[0]=0;
     normal_vector.c[1]=0;
     normal_vector.c[2]=-1;
-    Vector<int> burgers_vector;
+    Vector<double> burgers_vector;
     burgers_vector.c[0]=1;
     burgers_vector.c[1]=1;
     burgers_vector.c[2]=1;

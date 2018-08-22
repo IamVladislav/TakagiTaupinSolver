@@ -44,7 +44,7 @@ template <typename type_of_input, typename type_of_return> Vector<type_of_return
 
 template <typename type_of_input, typename type_of_return> Vector<type_of_return> Vector_Normalization(Vector<type_of_input> vector){
     Vector<type_of_return> vector_normalize;
-    double abs_vector=sqrt(vector.c[0]*vector.c[0]+vector.c[1]*vector.c[1]+vector.c[2]*vector.c[2]);
+    double abs_vector=Vector_Absolute_Value(vector);
     vector_normalize.c[0]=vector.c[0]/abs_vector;
     vector_normalize.c[1]=vector.c[1]/abs_vector;
     vector_normalize.c[2]=vector.c[2]/abs_vector;
@@ -57,6 +57,18 @@ template <typename type_of_input> Vector<type_of_input> Vector_Inverse(Vector<ty
     inverse_vector.c[1]=-vector.c[1];
     inverse_vector.c[2]=-vector.c[2];
     return inverse_vector;
+}
+
+template <typename type_of_input> type_of_input Scalar_Multiplication(Vector<type_of_input> first_vector, Vector<type_of_input> second_vector){
+    double scalar_multiplication;
+    scalar_multiplication=first_vector.c[0]*second_vector.c[0]+first_vector.c[1]*second_vector.c[1]+first_vector.c[2]*second_vector.c[2];
+    return scalar_multiplication;
+}
+
+template <typename type_of_input> double Vector_Absolute_Value(Vector<type_of_input> first_vector){
+    double vector_absolute_value;
+    vector_absolute_value=sqrt(first_vector.c[0]*first_vector.c[0]+first_vector.c[1]*first_vector.c[1]+first_vector.c[2]*first_vector.c[2]);
+    return vector_absolute_value;
 }
 
 #endif /* Vector_And_Operations_hpp */
