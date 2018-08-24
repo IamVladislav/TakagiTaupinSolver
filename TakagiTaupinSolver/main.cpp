@@ -39,12 +39,32 @@ public:
     }
 };
 
+class Parallel_Shfit: public System_Replacment{
+public:
+    double x_shift, y_shift, z_shift;
+    Parallel_Shfit(double x_shift,double y_shift,double z_shift){
+        this->x_shift=x_shift;
+        this->y_shift=y_shift;
+        this->z_shift=z_shift;
+    }
+    void Basis(double x, double y, double z) override {
+        xc=x-x_shift;
+        yc=y-y_shift;
+        zc=z-z_shift;
+    }
+    void Basis_Inverse(double x, double y, double z) override {
+        xcinv=x+x_shift;
+        ycinv=y+y_shift;
+        zcinv=z+z_shift;
+    }
+};
+
 
 class DisplacmentGradient{
 public:
     virtual ~DisplacmentGradient(){}
-    Vector<double> b;
-    double depth;
+    Vector<double> burgers_vector;
+    double depth, nu, kappa;
     double segment_lenght;
     virtual double uxxcalc(double x, double y, double z) = 0;
     virtual double uxycalc(double x, double y, double z) = 0;
@@ -60,9 +80,9 @@ public:
 class TestDisp: public DisplacmentGradient{
 public:
     TestDisp(){
-        b.c[0]=3;
-        b.c[1]=3;
-        b.c[2]=3;
+        burgers_vector.c[0]=3;
+        burgers_vector.c[1]=3;
+        burgers_vector.c[2]=3;
     }
     double uxxcalc(double x, double y, double z) override
     {
@@ -115,17 +135,21 @@ class DisplacmentGradientSystemReplace: public virtual DisplacmentGradient{
 public:
     Rotation_Matrix_Z *rotate;
     DisplacmentGradient *displacment;
-    double l;//mock
-    DisplacmentGradientSystemReplace(double bu, double h, double nu, DisplacmentGradient& obj)//mock
+    double phi;
+    DisplacmentGradientSystemReplace(Vector<double> burgers_vector, double depth, double nu, double phi, double kappa, DisplacmentGradient& obj)//mock
     {
-        rotate = new Rotation_Matrix_Z(l);
+        this->burgers_vector=burgers_vector;
+        rotate = new Rotation_Matrix_Z(phi);
         displacment=&obj;
-        l=5;//mock
+        this->phi=phi;
+        this->depth=depth;
+        this->nu=nu;
+        this->kappa=kappa;
     }
     double uxxcalc(double x, double y, double z) override
     {
         rotate->Basis(x,y,z);
-        double uxx=displacment->uxxcalc(rotate->xc, rotate->yc, rotate->zc)*cos(l)*cos(l) - displacment->uxycalc(rotate->xc, rotate->yc, rotate->zc)*cos(l)*sin(l) - displacment->uyxcalc(rotate->xc, rotate->yc, rotate->zc)*cos(l)*sin(l) + displacment->uyycalc(rotate->xc, rotate->yc, rotate->zc)*sin(l)*sin(l);
+        double uxx=displacment->uxxcalc(rotate->xc, rotate->yc, rotate->zc)*cos(phi)*cos(phi) - displacment->uxycalc(rotate->xc, rotate->yc, rotate->zc)*cos(phi)*sin(phi) - displacment->uyxcalc(rotate->xc, rotate->yc, rotate->zc)*cos(phi)*sin(phi) + displacment->uyycalc(rotate->xc, rotate->yc, rotate->zc)*sin(phi)*sin(phi);
         return uxx;
     }
     double uxycalc(double x, double y, double z) override //mock
@@ -262,7 +286,6 @@ int main(int argc, const char * argv[]) {
     //std::cout << p.uxx << std::endl;
     Rotation_Matrix_Z t(10);
     //std::cout<<t.Test()<<std::endl;
-    DisplacmentGradientSystemReplace obj(1, 1, 1, p);
     //std::cout<<obj.uxxcalc(1, 1, 1)<<std::endl;
     std::vector <Vector<double>> test;
     std::vector <double> segment_lenght;
@@ -285,6 +308,7 @@ int main(int argc, const char * argv[]) {
     segment_lenght.push_back(0);
     segment_lenght.push_back(0);
     InitialisationGeometry p_test(diffraction_vector, normal_vector, test, burgers_vector, 2, 2, segment_lenght);
+    DisplacmentGradientSystemReplace obj(burgers_vector, 1, 1, 1, 1, p);
     //std::cout << p_test.glide_plane_vector << std::endl;
     std::cout<<std::endl;
     std::cout << p_test.phi[2] << std::endl;
