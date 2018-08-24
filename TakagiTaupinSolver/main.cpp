@@ -43,8 +43,9 @@ public:
 class DisplacmentGradient{
 public:
     virtual ~DisplacmentGradient(){}
-    double uxx,uxy,uxz,uyx,uyy,uyz,uzx,uzy,uzz;
     Vector<double> b;
+    double depth;
+    double segment_lenght;
     virtual double uxxcalc(double x, double y, double z) = 0;
     virtual double uxycalc(double x, double y, double z) = 0;
     virtual double uxzcalc(double x, double y, double z) = 0;
@@ -65,47 +66,47 @@ public:
     }
     double uxxcalc(double x, double y, double z) override
     {
-        uxx=10;
+        double uxx=10;
         return uxx;
     }
     double uxycalc(double x, double y, double z) override
     {
-        uxy=5;
+        double uxy=5;
         return uxy;
     }
     double uxzcalc(double x, double y, double z) override
     {
-        uxz=5;
+        double uxz=5;
         return uxz;
     }
     double uyxcalc(double x, double y, double z) override
     {
-        uyx=5;
+        double uyx=5;
         return uyx;
     }
     double uyycalc(double x, double y, double z) override
     {
-        uyy=5;
+        double uyy=5;
         return uyy;
     }
     double uyzcalc(double x, double y, double z) override
     {
-        uyy=5;
+        double uyz=5;
         return uyz;
     }
     double uzxcalc(double x, double y, double z) override
     {
-        uzx=5;
+        double uzx=5;
         return uzx;
     }
     double uzycalc(double x, double y, double z) override
     {
-        uzy=5;
+        double uzy=5;
         return uzy;
     }
     double uzzcalc(double x, double y, double z) override
     {
-        uzz=5;
+        double uzz=5;
         return uzz;
     }
 };
@@ -124,47 +125,47 @@ public:
     double uxxcalc(double x, double y, double z) override
     {
         rotate->Basis(x,y,z);
-        uxx=displacment->uxxcalc(rotate->xc, rotate->yc, rotate->zc)*cos(l)*cos(l) - displacment->uxycalc(rotate->xc, rotate->yc, rotate->zc)*cos(l)*sin(l) - displacment->uyxcalc(rotate->xc, rotate->yc, rotate->zc)*cos(l)*sin(l) + displacment->uyycalc(rotate->xc, rotate->yc, rotate->zc)*sin(l)*sin(l);
+        double uxx=displacment->uxxcalc(rotate->xc, rotate->yc, rotate->zc)*cos(l)*cos(l) - displacment->uxycalc(rotate->xc, rotate->yc, rotate->zc)*cos(l)*sin(l) - displacment->uyxcalc(rotate->xc, rotate->yc, rotate->zc)*cos(l)*sin(l) + displacment->uyycalc(rotate->xc, rotate->yc, rotate->zc)*sin(l)*sin(l);
         return uxx;
     }
     double uxycalc(double x, double y, double z) override //mock
     {
-        uxy=displacment->uxxcalc(rotate->xc, rotate->yc, rotate->zc);
+        double uxy=displacment->uxxcalc(rotate->xc, rotate->yc, rotate->zc);
         return uxy;
     }
     double uxzcalc(double x, double y, double z) override //mock
     {
-        uxz=5;
+        double uxz=5;
         return uxz;
     }
     double uyxcalc(double x, double y, double z) override //mock
     {
-        uyx=5;
+        double uyx=5;
         return uyx;
     }
     double uyycalc(double x, double y, double z) override //mock
     {
-        uyy=5;
+        double uyy=5;
         return uyy;
     }
     double uyzcalc(double x, double y, double z) override //mock
     {
-        uyz=5;
+        double uyz=5;
         return uyz;
     }
     double uzxcalc(double x, double y, double z) override //mock
     {
-        uzx=5;
+        double uzx=5;
         return uzx;
     }
     double uzycalc(double x, double y, double z) override //mock
     {
-        uzy=5;
+        double uzy=5;
         return uzy;
     }
     double uzzcalc(double x, double y, double z) override //mock
     {
-        uzz=5;
+        double uzz=5;
         return uzz;
     }
 };
