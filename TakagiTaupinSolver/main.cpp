@@ -11,6 +11,8 @@
 #include <vector>
 #include "Vector_And_Operations.hpp"
 
+const double PI_2=1.5708;
+
 class System_Replacment{
 public:
     double xc, yc, zc;
@@ -173,7 +175,7 @@ public:
     std::vector <double> kappa, phi;
     std::vector <Vector<double>> exit_point;
     double dislocation_depth;
-    InitialisationGeometry(Vector<double> diffraction_vector,Vector<double> normal_vector,std::vector <Vector<double>> direction_vector_list, Vector<double> burgers_vector, int nubmer_of_dislocation, double dislocation_depth){
+    InitialisationGeometry(Vector<double> diffraction_vector,Vector<double> normal_vector,std::vector <Vector<double>> direction_vector_list, Vector<double> burgers_vector, int nubmer_of_dislocation, double dislocation_depth, std::vector <double> segment_lenght){
         x_vector=Vector_Normalization<double, double>(diffraction_vector);
         z_vector=Vector_Normalization<double, double>(Vector_Inverse(normal_vector));
         y_vector=Vector_Multiplication<double, double>(z_vector, x_vector);
@@ -210,13 +212,19 @@ public:
             comparison_vector=glide_plane_vector;
         }
     }
-    void Exit_Point_Coordinate(std::vector <Vector<double>> direction_vector_list){//TODO: Add a if-else for 1/0 exception
+    void Exit_Point_Coordinate(std::vector <Vector<double>> direction_vector_list, std::vector <double> segment_lenght){//TODO: Add a if-else for 1/0 exception
         Vector<double> exit_point_calculation;
         for(int i=0;i<direction_vector_list.size();i++)
         {
-            exit_point_calculation.c[2]=dislocation_depth;
-            exit_point_calculation.c[0]=dislocation_depth/tan(kappa[i])*cos(phi[i]);
-            exit_point_calculation.c[1]=dislocation_depth/tan(kappa[i])*sin(phi[i]);
+            exit_point_calculation.c[2]=-dislocation_depth;
+            if(kappa[i]>=(PI_2-0.005*PI_2) && kappa[i]<=(PI_2+0.005*PI_2)){
+                exit_point_calculation.c[0]=(segment_lenght[i])*cos(phi[i]);
+                exit_point_calculation.c[1]=(segment_lenght[i])*sin(phi[i]);
+            }
+            else{
+                exit_point_calculation.c[0]=(dislocation_depth/tan(kappa[i])+segment_lenght[i])*cos(phi[i]);
+                exit_point_calculation.c[1]=(dislocation_depth/tan(kappa[i])+segment_lenght[i])*sin(phi[i]);
+            }
             exit_point.push_back(exit_point_calculation);
         }
     }
@@ -231,8 +239,16 @@ public:
         {
             Vector <double> vector_normal_tayz=Vector_Multiplication<double, double>(direction_vector_list[i], z_vector);
             Vector <double> vector_normal_xz=Vector_Multiplication<double, double>(x_vector, z_vector);
-            phi_calculate=acos(Scalar_Multiplication(vector_normal_tayz, vector_normal_xz)/(Vector_Absolute_Value(vector_normal_xz)*Vector_Absolute_Value(vector_normal_tayz)));
+            if(Vector_Absolute_Value(vector_normal_tayz)==0 || Vector_Absolute_Value(vector_normal_tayz)==0){
+                phi_calculate=0;
+            }
+            else{
+                phi_calculate=acos(Scalar_Multiplication(vector_normal_tayz, vector_normal_xz)/(Vector_Absolute_Value(vector_normal_xz)*Vector_Absolute_Value(vector_normal_tayz)));
+            }
             kappa_calculate=acos(Scalar_Multiplication(z_vector, direction_vector_list[i])/(Vector_Absolute_Value(z_vector)*Vector_Absolute_Value(direction_vector_list[i])));
+            if(kappa_calculate>PI_2){
+                kappa_calculate=kappa_calculate-PI_2;
+            }
             kappa.push_back(kappa_calculate);
             phi.push_back(phi_calculate);
         }
@@ -248,6 +264,7 @@ int main(int argc, const char * argv[]) {
     DisplacmentGradientSystemReplace obj(1, 1, 1, p);
     //std::cout<<obj.uxxcalc(1, 1, 1)<<std::endl;
     std::vector <Vector<double>> test;
+    std::vector <double> segment_lenght;
     Vector<double> diffraction_vector;
     diffraction_vector.c[0]=1;
     diffraction_vector.c[1]=0;
@@ -263,7 +280,10 @@ int main(int argc, const char * argv[]) {
     test.push_back(diffraction_vector);
     test.push_back(normal_vector);
     test.push_back(burgers_vector);
-    InitialisationGeometry p_test(diffraction_vector, normal_vector, test, burgers_vector, 2, 2);
+    segment_lenght.push_back(0);
+    segment_lenght.push_back(0);
+    segment_lenght.push_back(0);
+    InitialisationGeometry p_test(diffraction_vector, normal_vector, test, burgers_vector, 2, 2, segment_lenght);
     //std::cout << p_test.glide_plane_vector << std::endl;
     std::cout<<std::endl;
     std::cout << p_test.phi[2] << std::endl;
