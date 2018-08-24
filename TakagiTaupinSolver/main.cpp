@@ -39,6 +39,25 @@ public:
     }
 };
 
+class Rotation_Matrix_Z_Vector{
+public:
+    double phi;
+    Vector<double> vector,vector_inv;
+    Rotation_Matrix_Z_Vector(double phi){
+        this->phi=phi;
+    }
+    void Basis(Vector<double> input_vector) {
+        vector.c[0]=input_vector.c[0]*cos(phi)+input_vector.c[1]*sin(phi);
+        vector.c[1]=-input_vector.c[0]*sin(phi)+input_vector.c[1]*cos(phi);
+        vector.c[2]=input_vector.c[2];
+    }
+    void Basis_Inverse(Vector<double> input_vector) {
+        vector_inv.c[0]=input_vector.c[0]*cos(phi)-input_vector.c[1]*sin(phi);
+        vector_inv.c[1]=input_vector.c[0]*sin(phi)+input_vector.c[1]*cos(phi);
+        vector_inv.c[2]=input_vector.c[2];
+    }
+};
+
 class Rotation_Matrix_Y: public System_Replacment{
 public:
     double phi;
@@ -152,27 +171,30 @@ public:
 class DisplacmentGradientSystemReplace: public virtual DisplacmentGradient{
 public:
     Rotation_Matrix_Z *rotate;
-    DisplacmentGradient *displacment;
+    Rotation_Matrix_Z_Vector *rotate_vector;
+    DisplacmentGradient *distortion_gradients;
     double phi;
-    DisplacmentGradientSystemReplace(Vector<double> burgers_vector, double depth, double nu, double phi, double kappa, DisplacmentGradient& obj)//mock
+    DisplacmentGradientSystemReplace(Vector<double> burgers_vector, double depth, double nu, double phi, double kappa, DisplacmentGradient& distorsion_gradients)//mock
     {
-        this->burgers_vector=burgers_vector;
         rotate = new Rotation_Matrix_Z(phi);
-        displacment=&obj;
+        rotate_vector = new Rotation_Matrix_Z_Vector(phi);
+        distortion_gradients=&distorsion_gradients;
         this->phi=phi;
         this->depth=depth;
         this->nu=nu;
         this->kappa=kappa;
+        rotate_vector->Basis(burgers_vector);
+        this->burgers_vector=rotate_vector->vector;
     }
     double uxxcalc(double x, double y, double z) override
     {
         rotate->Basis(x,y,z);
-        double uxx=displacment->uxxcalc(rotate->xc, rotate->yc, rotate->zc)*cos(phi)*cos(phi) - displacment->uxycalc(rotate->xc, rotate->yc, rotate->zc)*cos(phi)*sin(phi) - displacment->uyxcalc(rotate->xc, rotate->yc, rotate->zc)*cos(phi)*sin(phi) + displacment->uyycalc(rotate->xc, rotate->yc, rotate->zc)*sin(phi)*sin(phi);
+        double uxx=distortion_gradients->uxxcalc(rotate->xc, rotate->yc, rotate->zc)*cos(phi)*cos(phi) - distortion_gradients->uxycalc(rotate->xc, rotate->yc, rotate->zc)*cos(phi)*sin(phi) - distortion_gradients->uyxcalc(rotate->xc, rotate->yc, rotate->zc)*cos(phi)*sin(phi) + distortion_gradients->uyycalc(rotate->xc, rotate->yc, rotate->zc)*sin(phi)*sin(phi);
         return uxx;
     }
     double uxycalc(double x, double y, double z) override //mock
     {
-        double uxy=displacment->uxxcalc(rotate->xc, rotate->yc, rotate->zc);
+        double uxy=distortion_gradients->uxxcalc(rotate->xc, rotate->yc, rotate->zc);
         return uxy;
     }
     double uxzcalc(double x, double y, double z) override //mock
