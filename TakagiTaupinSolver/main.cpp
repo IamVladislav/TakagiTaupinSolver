@@ -117,9 +117,6 @@ public:
 class TestDisp: public DisplacmentGradient{
 public:
     TestDisp(){
-        burgers_vector.c[0]=3;
-        burgers_vector.c[1]=3;
-        burgers_vector.c[2]=3;
     }
     double uxxcalc(double x, double y, double z) override
     {
@@ -185,6 +182,7 @@ public:
         this->kappa=kappa;
         rotate_vector->Basis(burgers_vector);
         this->burgers_vector=rotate_vector->vector;
+        distortion_gradients->burgers_vector=this->burgers_vector;
     }
     double uxxcalc(double x, double y, double z) override
     {
@@ -350,7 +348,7 @@ int main(int argc, const char * argv[]) {
     InitialisationGeometry p_test(diffraction_vector, normal_vector, test, burgers_vector, 2, 2, segment_lenght);
     DisplacmentGradientSystemReplace obj(burgers_vector, 1, 1, 1, 1, p);
     //std::cout << p_test.glide_plane_vector << std::endl;
-    std::cout<<std::endl;
-    std::cout << p_test.phi[2] << std::endl;
+    //std::cout<<std::endl;
+    //std::cout << p_test.phi[2] << std::endl;
     return 0;
 }
