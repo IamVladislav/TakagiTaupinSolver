@@ -39,6 +39,24 @@ public:
     }
 };
 
+class Rotation_Matrix_Y: public System_Replacment{
+public:
+    double phi;
+    Rotation_Matrix_Y(double phi){
+        this->phi=phi;
+    }
+    void Basis(double x, double y, double z) override {
+        xc=x*cos(phi)+z*sin(phi);
+        yc=y;
+        zc=-x*sin(phi)+z*cos(phi);
+    }
+    void Basis_Inverse(double x, double y, double z) override {
+        xcinv=x*cos(phi)-z*sin(phi);
+        ycinv=y;
+        zcinv=x*sin(phi)+z*cos(phi);
+    }
+};
+
 class Parallel_Shfit: public System_Replacment{
 public:
     double x_shift, y_shift, z_shift;
