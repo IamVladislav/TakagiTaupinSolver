@@ -190,44 +190,44 @@ public:
         double uxx=distortion_gradients->uxxcalc(rotate->xc, rotate->yc, rotate->zc)*cos(phi)*cos(phi) - distortion_gradients->uxycalc(rotate->xc, rotate->yc, rotate->zc)*cos(phi)*sin(phi) - distortion_gradients->uyxcalc(rotate->xc, rotate->yc, rotate->zc)*cos(phi)*sin(phi) + distortion_gradients->uyycalc(rotate->xc, rotate->yc, rotate->zc)*sin(phi)*sin(phi);
         return uxx;
     }
-    double uxycalc(double x, double y, double z) override //mock
+    double uxycalc(double x, double y, double z) override
     {
-        double uxy=distortion_gradients->uxxcalc(rotate->xc, rotate->yc, rotate->zc);
+        double uxy=distortion_gradients->uxycalc (rotate -> xc, rotate -> yc, rotate -> zc)*pow(cos(phi), 2) + distortion_gradients->uxxcalc (rotate -> xc, rotate -> yc, rotate -> zc)*cos(phi)*sin(phi) - distortion_gradients->uyycalc (rotate -> xc, rotate -> yc, rotate -> zc)*cos(phi)*sin(phi) -distortion_gradients->uyxcalc(rotate -> xc, rotate -> yc, rotate -> zc)*pow(sin(phi), 2);
         return uxy;
     }
-    double uxzcalc(double x, double y, double z) override //mock
+    double uxzcalc(double x, double y, double z) override
     {
-        double uxz=5;
+        double uxz=distortion_gradients->uxzcalc(rotate -> xc, rotate -> yc, rotate -> zc)*cos(phi) - distortion_gradients->uyzcalc(rotate -> xc, rotate -> yc, rotate -> zc)*sin (phi);
         return uxz;
     }
-    double uyxcalc(double x, double y, double z) override //mock
+    double uyxcalc(double x, double y, double z) override
     {
-        double uyx=5;
+        double uyx=distortion_gradients->uyxcalc (rotate -> xc, rotate -> yc, rotate -> zc)*pow (cos (phi), 2) + distortion_gradients ->uxxcalc (rotate -> xc, rotate -> yc, rotate -> zc)*cos (phi)*sin (phi) - distortion_gradients ->uyycalc (rotate -> xc, rotate -> yc, rotate -> zc)*cos (phi)*sin (phi) - distortion_gradients ->uxycalc (rotate -> xc, rotate -> yc, rotate -> zc)*pow (sin (phi), 2);
         return uyx;
     }
-    double uyycalc(double x, double y, double z) override //mock
+    double uyycalc(double x, double y, double z) override
     {
-        double uyy=5;
+        double uyy=distortion_gradients ->uyycalc (rotate -> xc, rotate -> yc, rotate -> zc)*pow (cos (phi), 2) + distortion_gradients ->uxycalc (rotate -> xc, rotate -> yc, rotate -> zc)*cos (phi)*sin (phi) + distortion_gradients ->uyxcalc (rotate -> xc, rotate -> yc, rotate -> zc)*cos (phi)*sin (phi) + distortion_gradients ->uxxcalc (rotate -> xc, rotate -> yc, rotate -> zc)*pow (sin (phi), 2);
         return uyy;
     }
-    double uyzcalc(double x, double y, double z) override //mock
+    double uyzcalc(double x, double y, double z) override
     {
-        double uyz=5;
+        double uyz=distortion_gradients ->uyzcalc (rotate -> xc, rotate -> yc, rotate -> zc)*cos (phi) +distortion_gradients ->uxzcalc (rotate -> xc, rotate -> yc, rotate -> zc)*sin (phi);
         return uyz;
     }
-    double uzxcalc(double x, double y, double z) override //mock
+    double uzxcalc(double x, double y, double z) override
     {
-        double uzx=5;
+        double uzx=distortion_gradients ->uzxcalc (rotate -> xc, rotate -> yc, rotate -> zc)*cos (phi) -distortion_gradients ->uzycalc (rotate -> xc, rotate -> yc, rotate -> zc)*sin (phi);
         return uzx;
     }
-    double uzycalc(double x, double y, double z) override //mock
+    double uzycalc(double x, double y, double z) override
     {
-        double uzy=5;
+        double uzy=distortion_gradients ->uzycalc (rotate -> xc, rotate -> yc, rotate -> zc)*cos (phi) +distortion_gradients ->uzxcalc (rotate -> xc, rotate -> yc, rotate -> zc)*sin (phi);
         return uzy;
     }
-    double uzzcalc(double x, double y, double z) override //mock
+    double uzzcalc(double x, double y, double z) override
     {
-        double uzz=5;
+        double uzz=distortion_gradients ->uzzcalc (rotate -> xc, rotate -> yc, rotate -> zc);
         return uzz;
     }
 };
