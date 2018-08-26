@@ -248,11 +248,14 @@ public:
         catch (const char *str){
             std::cout << str;
         }
+        burgers_vector.c[0]=burgers_vector.c[0]*nubmer_of_dislocation;
+        burgers_vector.c[1]=burgers_vector.c[1]*nubmer_of_dislocation;
+        burgers_vector.c[2]=burgers_vector.c[2]*nubmer_of_dislocation;
         Burgers_Vector_Into_System_Coordinates(burgers_vector);
         this->dislocation_depth=dislocation_depth;
         Angle_Between_Dislocation_Axis_And_Calculation_Axis(direction_vector_list);
     }
-    void Glide_Plane(std::vector <Vector<double>> direction_vector_list){//not tested
+    void Glide_Plane(std::vector <Vector<double>> direction_vector_list){//untested
         switch (direction_vector_list.size()) {
             case 0:
                 std::cerr<<"Can't calculate a glide plane, list is empty!"<<std::endl;
@@ -265,7 +268,7 @@ public:
                 break;
         }
     }
-    void Glide_Plane_Calculate(std::vector <Vector<double>> direction_vector_list){//not tested
+    void Glide_Plane_Calculate(std::vector <Vector<double>> direction_vector_list){//untested
         Vector<double> comparison_vector;
         for(int i=1;i<direction_vector_list.size();i++){
             glide_plane_vector=Vector_Multiplication<double, double>(direction_vector_list[i-1], direction_vector_list[i]);
@@ -275,7 +278,7 @@ public:
             comparison_vector=glide_plane_vector;
         }
     }
-    void Exit_Point_Coordinate(std::vector <Vector<double>> direction_vector_list, std::vector <double> segment_lenght){//TODO: Add a if-else for 1/0 exception
+    void Exit_Point_Coordinate(std::vector <Vector<double>> direction_vector_list, std::vector <double> segment_lenght){//untested
         Vector<double> exit_point_calculation;
         for(int i=0;i<direction_vector_list.size();i++)
         {
@@ -296,7 +299,7 @@ public:
         b_vector.c[1]=-((b_initial.c[2]*x_vector.c[1]*z_vector.c[0] - b_initial.c[1]*x_vector.c[2]*z_vector.c[0] - b_initial.c[2]*x_vector.c[0]*z_vector.c[1] + b_initial.c[0]*x_vector.c[2]*z_vector.c[1] + b_initial.c[1]*x_vector.c[0]*z_vector.c[2] - b_initial.c[0]*x_vector.c[1]*z_vector.c[2])/(x_vector.c[2]* y_vector.c[1]*z_vector.c[0] - x_vector.c[1]*y_vector.c[2]*z_vector.c[0] - x_vector.c[2]*y_vector.c[0]*z_vector.c[1] + x_vector.c[0]*y_vector.c[2]*z_vector.c[1] + x_vector.c[1]*y_vector.c[0]*z_vector.c[2] - x_vector.c[0]*y_vector.c[1]*z_vector.c[2]));
         b_vector.c[2]=-((b_initial.c[2]*x_vector.c[1]*y_vector.c[0] - b_initial.c[1]*x_vector.c[2]*y_vector.c[0] - b_initial.c[2]*x_vector.c[0]*y_vector.c[1] + b_initial.c[0]*x_vector.c[2]*y_vector.c[1] + b_initial.c[1]*x_vector.c[0]*y_vector.c[2] - b_initial.c[0]*x_vector.c[1]* y_vector.c[2])/(-(x_vector.c[2]*y_vector.c[1]*z_vector.c[0]) + x_vector.c[1]*y_vector.c[2]*z_vector.c[0] + x_vector.c[2]*y_vector.c[0]*z_vector.c[1] - x_vector.c[0]*y_vector.c[2]*z_vector.c[1] - x_vector.c[1]*y_vector.c[0]*z_vector.c[2] + x_vector.c[0]*y_vector.c[1]*z_vector.c[2]));
     }
-    void Angle_Between_Dislocation_Axis_And_Calculation_Axis(std::vector <Vector<double>> direction_vector_list){//TODO: find case and solution, if tay and phi more than pi, what;s happend?
+    void Angle_Between_Dislocation_Axis_And_Calculation_Axis(std::vector <Vector<double>> direction_vector_list){//untested
         double kappa_calculate,phi_calculate;
         for(int i=0;i<direction_vector_list.size();i++)
         {
@@ -319,36 +322,43 @@ public:
 };
 
 int main(int argc, const char * argv[]) {
-    TestDisp p;
-    p.uxxcalc(1, 1, 1);
-    //std::cout << p.uxx << std::endl;
-    Rotation_Matrix_Z t(10);
-    //std::cout<<t.Test()<<std::endl;
-    //std::cout<<obj.uxxcalc(1, 1, 1)<<std::endl;
-    std::vector <Vector<double>> test;
-    std::vector <double> segment_lenght;
+    //Input data
+    //Diffraction vector:
     Vector<double> diffraction_vector;
     diffraction_vector.c[0]=1;
     diffraction_vector.c[1]=0;
     diffraction_vector.c[2]=0;
+    //Normal to surface vector:
     Vector<double> normal_vector;
     normal_vector.c[0]=0;
     normal_vector.c[1]=0;
     normal_vector.c[2]=-1;
+    //Vector of tay-vectors:
+    std::vector <Vector<double>> tay_vector;
+    Vector<double> tay_1;
+    tay_1.c[0]=-1;
+    tay_1.c[1]=0;
+    tay_1.c[2]=-1;
+    tay_vector.push_back(tay_1);
+    Vector<double> tay_2;
+    tay_2.c[0]=1;
+    tay_2.c[1]=0;
+    tay_2.c[2]=0;
+    tay_vector.push_back(tay_2);
+    //Burger's vectorof dislocation:
     Vector<double> burgers_vector;
-    burgers_vector.c[0]=0;
-    burgers_vector.c[1]=1;
-    burgers_vector.c[2]=1;
-    test.push_back(diffraction_vector);
-    test.push_back(normal_vector);
-    test.push_back(burgers_vector);
+    burgers_vector.c[0]=1;
+    burgers_vector.c[1]=0;
+    burgers_vector.c[2]=0;
+    //Number of dislocation in one place:
+    int number_of_dislocation=2;
+    //Dislocation depth:
+    double dislocation_depth=100;
+    //Segment lengt (thi first and second position must be zeros! If the dislocation have more, then to segments, then add into third position a value of mid segment lenght)
+    std::vector<double> segment_lenght;
     segment_lenght.push_back(0);
     segment_lenght.push_back(0);
-    segment_lenght.push_back(0);
-    InitialisationGeometry p_test(diffraction_vector, normal_vector, test, burgers_vector, 2, 2, segment_lenght);
-    DisplacmentGradientSystemReplace obj(burgers_vector, 1, 1, 1, 1, p);
-    //std::cout << p_test.glide_plane_vector << std::endl;
-    //std::cout<<std::endl;
-    //std::cout << p_test.phi[2] << std::endl;
+    //Start of initialization
+    InitialisationGeometry *init_obj = new InitialisationGeometry(diffraction_vector, normal_vector,tay_vector, burgers_vector, number_of_dislocation,dislocation_depth,segment_lenght);
     return 0;
 }
