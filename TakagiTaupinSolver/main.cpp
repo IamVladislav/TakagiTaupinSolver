@@ -77,6 +77,25 @@ public:
     }
 };
 
+class Rotation_Matrix_Y_Vector{
+public:
+    double phi;
+    Vector<double> vector,vector_inv;
+    Rotation_Matrix_Y_Vector(double phi){
+        this->phi=phi;
+    }
+    void Basis(Vector<double> input_vector) {
+        vector.c[0]=input_vector.c[0]*cos(phi)+input_vector.c[2]*sin(phi);
+        vector.c[1]=input_vector.c[1];
+        vector.c[2]=-input_vector.c[0]*sin(phi)+input_vector.c[2]*cos(phi);
+    }
+    void Basis_Inverse(Vector<double> input_vector) {
+        vector_inv.c[0]=input_vector.c[0]*cos(phi)-input_vector.c[2]*sin(phi);
+        vector_inv.c[1]=input_vector.c[1];
+        vector_inv.c[2]=input_vector.c[0]*sin(phi)+input_vector.c[2]*cos(phi);
+    }
+};
+
 class Parallel_Shfit: public System_Replacment{
 public:
     double x_shift, y_shift, z_shift;
@@ -115,13 +134,23 @@ public:
     virtual double uzzcalc(double x, double y, double z) = 0;
 };
 
-class BeamDislocation: public DisplacmentGradient{
+class BeamDislocation: public DisplacmentGradient{//untested
 public:
     double theta;
-    BeamDislocation(){
-        theta=0;//mock
+    Parallel_Shfit *parallel_shift;
+    BeamDislocation(double kappa, Vector<double> exit_point_coordinate, Vector<double> burgers_vector){
+        this->kappa=kappa;
+        theta=kappa-PI_2;
+        parallel_shift = new Parallel_Shfit(sqrt(pow(exit_point_coordinate.c[0],2)+pow(exit_point_coordinate.c[1],2)), 0, exit_point_coordinate.c[2]);
+        Rotation_Matrix_Y_Vector *burgers_vector_rotate = new Rotation_Matrix_Y_Vector(theta);
+        burgers_vector_rotate->Basis(burgers_vector);
+        this->burgers_vector=burgers_vector_rotate->vector;
     }
     double uxxcalc(double x, double y, double z){
+        parallel_shift->Basis(x, y, z);
+        x=parallel_shift->xc;
+        y=parallel_shift->yc;
+        z=parallel_shift->zc;
         double r1 = pow(y,2);
         double r2 = pow(x,2);
         double r3 = pow(z,2);
@@ -162,6 +191,10 @@ public:
         return uxx;
     }
     double uxycalc(double x, double y, double z){
+        parallel_shift->Basis(x, y, z);
+        x=parallel_shift->xc;
+        y=parallel_shift->yc;
+        z=parallel_shift->zc;
         double r1 = pow(y,2);
         double r2 = pow(x,2);
         double r3 = pow(z,2);
@@ -201,6 +234,10 @@ public:
         return uxy;
     }
     double uxzcalc(double x, double y, double z){
+        parallel_shift->Basis(x, y, z);
+        x=parallel_shift->xc;
+        y=parallel_shift->yc;
+        z=parallel_shift->zc;
         double r1 = pow(y,2);
         double r2 = pow(x,2);
         double r3 = pow(z,2);
@@ -243,6 +280,10 @@ public:
         return uxz;
     }
     double uyxcalc(double x, double y, double z){
+        parallel_shift->Basis(x, y, z);
+        x=parallel_shift->xc;
+        y=parallel_shift->yc;
+        z=parallel_shift->zc;
         double r1 = pow(y,2);
         double r2 = pow(x,2);
         double r3 = pow(z,2);
@@ -280,6 +321,10 @@ public:
         return uyx;
     }
     double uyycalc(double x, double y, double z){
+        parallel_shift->Basis(x, y, z);
+        x=parallel_shift->xc;
+        y=parallel_shift->yc;
+        z=parallel_shift->zc;
         double r1 = pow(y,2);
         double r2 = pow(x,2);
         double r3 = pow(z,2);
@@ -318,6 +363,10 @@ public:
         return uyy;
     }
     double uyzcalc(double x, double y, double z){
+        parallel_shift->Basis(x, y, z);
+        x=parallel_shift->xc;
+        y=parallel_shift->yc;
+        z=parallel_shift->zc;
         double r1 = pow(y,2);
         double r2 = pow(x,2);
         double r3 = pow(z,2);
@@ -360,6 +409,10 @@ public:
         return uyz;
     }
     double uzxcalc(double x, double y, double z){
+        parallel_shift->Basis(x, y, z);
+        x=parallel_shift->xc;
+        y=parallel_shift->yc;
+        z=parallel_shift->zc;
         double r1 = pow(y,2);
         double r2 = pow(x,2);
         double r3 = pow(z,2);
@@ -399,6 +452,10 @@ public:
         return uzx;
     }
     double uzycalc(double x, double y, double z){
+        parallel_shift->Basis(x, y, z);
+        x=parallel_shift->xc;
+        y=parallel_shift->yc;
+        z=parallel_shift->zc;
         double r1 = pow(y,2);
         double r2 = pow(x,2);
         double r3 = pow(z,2);
@@ -437,6 +494,10 @@ public:
         return uzy;
     }
     double uzzcalc(double x, double y, double z){
+        parallel_shift->Basis(x, y, z);
+        x=parallel_shift->xc;
+        y=parallel_shift->yc;
+        z=parallel_shift->zc;
         double r1 = pow(y,2);
         double r2 = pow(x,2);
         double r3 = pow(z,2);
@@ -481,7 +542,9 @@ public:
 
 class AngularDislocation: public DisplacmentGradient{
 public:
-    AngularDislocation(){
+    AngularDislocation(double kappa, Vector<double> burgers_vector){
+        this->kappa=kappa;
+        this->burgers_vector=burgers_vector;
     }
     double uxxcalc(double x, double y, double z) override
     {
@@ -940,11 +1003,11 @@ int main(int argc, const char * argv[]) {
     segment_lenght.push_back(0);
     //Start of initialization
     InitialisationGeometry *init_obj = new InitialisationGeometry(diffraction_vector, normal_vector,tay_vector, burgers_vector, number_of_dislocation,dislocation_depth,segment_lenght);
-    AngularDislocation *test = new AngularDislocation();
-    test->burgers_vector=burgers_vector;
-    test->depth=dislocation_depth;
-    test->kappa=1.0;
-    test->nu=0.4;
+//    AngularDislocation *test = new AngularDislocation();
+//    test->burgers_vector=burgers_vector;
+//    test->depth=dislocation_depth;
+//    test->kappa=1.0;
+//    test->nu=0.4;
 //    std::cout<<test->uxxcalc(5, 5, 5)<<std::endl;
 //    std::cout<<test->uxycalc(5, 5, 5)<<std::endl;
 //    std::cout<<test->uxzcalc(5, 5, 5)<<std::endl;
@@ -955,19 +1018,19 @@ int main(int argc, const char * argv[]) {
 //    std::cout<<test->uzycalc(5, 5, 5)<<std::endl;
 //    std::cout<<test->uzzcalc(5, 5, 5)<<std::endl;
     //
-    BeamDislocation *test1 = new BeamDislocation();
-    test1->burgers_vector=burgers_vector;
-    test1->depth=dislocation_depth;
-    test1->theta=1.0;
-    test1->nu=0.4;
-    std::cout<<test1->uxxcalc(5, 5, 5)<<std::endl;
-    std::cout<<test1->uxycalc(5, 5, 5)<<std::endl;
-    std::cout<<test1->uxzcalc(5, 5, 5)<<std::endl;
-    std::cout<<test1->uyxcalc(5, 5, 5)<<std::endl;
-    std::cout<<test1->uyycalc(5, 5, 5)<<std::endl;
-    std::cout<<test1->uyzcalc(5, 5, 5)<<std::endl;
-    std::cout<<test1->uzxcalc(5, 5, 5)<<std::endl;
-    std::cout<<test1->uzycalc(5, 5, 5)<<std::endl;
-    std::cout<<test1->uzzcalc(5, 5, 5)<<std::endl;
+//    BeamDislocation *test1 = new BeamDislocation();
+//    test1->burgers_vector=burgers_vector;
+//    test1->depth=dislocation_depth;
+//    test1->theta=1.0;
+//    test1->nu=0.4;
+//    std::cout<<test1->uxxcalc(5, 5, 5)<<std::endl;
+//    std::cout<<test1->uxycalc(5, 5, 5)<<std::endl;
+//    std::cout<<test1->uxzcalc(5, 5, 5)<<std::endl;
+//    std::cout<<test1->uyxcalc(5, 5, 5)<<std::endl;
+//    std::cout<<test1->uyycalc(5, 5, 5)<<std::endl;
+//    std::cout<<test1->uyzcalc(5, 5, 5)<<std::endl;
+//    std::cout<<test1->uzxcalc(5, 5, 5)<<std::endl;
+//    std::cout<<test1->uzycalc(5, 5, 5)<<std::endl;
+//    std::cout<<test1->uzzcalc(5, 5, 5)<<std::endl;
     return 0;
 }
