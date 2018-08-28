@@ -13,6 +13,7 @@
 
 const double PI_2=1.5708;
 const double PI=3.14159;
+const double INF=10001;
 
 class System_Replacment{
 public:
@@ -138,7 +139,8 @@ class BeamDislocation: public DisplacmentGradient{//untested
 public:
     double theta;
     Parallel_Shfit *parallel_shift;
-    BeamDislocation(double kappa, Vector<double> exit_point_coordinate, Vector<double> burgers_vector){
+    BeamDislocation(double nu, double kappa, Vector<double> exit_point_coordinate, Vector<double> burgers_vector){
+        this->nu=nu;
         this->kappa=kappa;
         theta=kappa-PI_2;
         parallel_shift = new Parallel_Shfit(sqrt(pow(exit_point_coordinate.c[0],2)+pow(exit_point_coordinate.c[1],2)), 0, exit_point_coordinate.c[2]);
@@ -542,7 +544,8 @@ public:
 
 class AngularDislocation: public DisplacmentGradient{
 public:
-    AngularDislocation(double kappa, Vector<double> burgers_vector){
+    AngularDislocation(double nu, double kappa, Vector<double> burgers_vector){
+        this->nu=nu;
         this->kappa=kappa;
         this->burgers_vector=burgers_vector;
     }
@@ -813,19 +816,31 @@ public:
     Rotation_Matrix_Z *rotate;
     Rotation_Matrix_Z_Vector *rotate_vector;
     DisplacmentGradient *distortion_gradients;
+    Vector<double> exit_point_coordinate;
     double phi;
-    DisplacmentGradientSystemReplace(Vector<double> burgers_vector, double depth, double nu, double phi, double kappa, DisplacmentGradient& distorsion_gradients)//mock
+    DisplacmentGradientSystemReplace(double nu, double depth, double phi, double kappa, Vector<double> exit_point_coordinate, Vector<double> burgers_vector, int type)//mock
     {
         rotate = new Rotation_Matrix_Z(phi);
         rotate_vector = new Rotation_Matrix_Z_Vector(phi);
-        distortion_gradients=&distorsion_gradients;
         this->phi=phi;
         this->depth=depth;
         this->nu=nu;
         this->kappa=kappa;
+        this->exit_point_coordinate=exit_point_coordinate;
         rotate_vector->Basis(burgers_vector);
         this->burgers_vector=rotate_vector->vector;
-        distortion_gradients->burgers_vector=this->burgers_vector;
+        switch (type) {
+            case 1:
+                distortion_gradients=new AngularDislocation(this->nu, this->kappa,this->burgers_vector);
+                break;
+            case 2:
+                distortion_gradients=new BeamDislocation(this->nu, this->kappa, this->exit_point_coordinate, this->burgers_vector);
+                break;
+            default:
+                break;
+        }
+//        distortion_gradients=&distorsion_gradients;
+//        distortion_gradients->burgers_vector=this->burgers_vector;
     }
     double uxxcalc(double x, double y, double z) override
     {
@@ -880,8 +895,11 @@ public:
     Vector<double> x_vector,y_vector,z_vector, glide_plane_vector, b_vector;
     std::vector <double> kappa, phi;
     std::vector <Vector<double>> exit_point;
-    double dislocation_depth;
-    InitialisationGeometry(Vector<double> diffraction_vector,Vector<double> normal_vector,std::vector <Vector<double>> direction_vector_list, Vector<double> burgers_vector, int nubmer_of_dislocation, double dislocation_depth, std::vector <double> segment_lenght){
+    std::vector <DisplacmentGradientSystemReplace> final_model;
+    double dislocation_depth, nu;
+    InitialisationGeometry(Vector<double> diffraction_vector,Vector<double> normal_vector,std::vector <Vector<double>> direction_vector_list,std::vector <double> segment_lenght,  double dislocation_depth, double nu, Vector<double> burgers_vector, int nubmer_of_dislocation){
+        this->nu=nu;
+        this->dislocation_depth=dislocation_depth;
         x_vector=Vector_Normalization<double, double>(diffraction_vector);
         z_vector=Vector_Normalization<double, double>(Vector_Inverse(normal_vector));
         y_vector=Vector_Multiplication<double, double>(z_vector, x_vector);
@@ -897,6 +915,24 @@ public:
         Burgers_Vector_Into_System_Coordinates(burgers_vector);
         this->dislocation_depth=dislocation_depth;
         Angle_Between_Dislocation_Axis_And_Calculation_Axis(direction_vector_list);
+        Exit_Point_Coordinate(direction_vector_list, segment_lenght);
+        Model_Creation(direction_vector_list);
+    }
+    void Model_Creation(std::vector <Vector<double>> direction_vector_list){//mock
+        for(int i=0;i<direction_vector_list.size();i++){
+            if(exit_point[i].c[0]>=(INF-0.01*INF) && exit_point[i].c[0]<=(INF+0.01*INF)){
+                DisplacmentGradientSystemReplace angular_dislocation(this->nu, this->dislocation_depth, this->phi[i], this->kappa[i], this->exit_point[i], this->b_vector, 1);
+                final_model.push_back(angular_dislocation);
+                std::cout<<"Parallel segment created!"<<std::endl;
+            }
+            else{
+                DisplacmentGradientSystemReplace angular_dislocation(this->nu, this->dislocation_depth, this->phi[i], this->kappa[i], this->exit_point[i], this->b_vector, 1);
+                final_model.push_back(angular_dislocation);
+                DisplacmentGradientSystemReplace beam_dislocation(this->nu, this->dislocation_depth, this->phi[i], this->kappa[i], this->exit_point[i], this->b_vector, 2);
+                final_model.push_back(beam_dislocation);
+                std::cout<<"Exit segment created!"<<std::endl;
+            }
+        }
     }
     void Glide_Plane(std::vector <Vector<double>> direction_vector_list){//untested
         switch (direction_vector_list.size()) {
@@ -926,13 +962,19 @@ public:
         for(int i=0;i<direction_vector_list.size();i++)
         {
             exit_point_calculation.c[2]=-dislocation_depth;
-            if(kappa[i]>=(PI_2-0.005*PI_2) && kappa[i]<=(PI_2+0.005*PI_2)){
+            if(kappa[i]>=(-0.01*PI_2) && kappa[i]<=(+0.01*PI_2)){
                 exit_point_calculation.c[0]=(segment_lenght[i])*cos(phi[i]);
                 exit_point_calculation.c[1]=(segment_lenght[i])*sin(phi[i]);
             }
             else{
-                exit_point_calculation.c[0]=(dislocation_depth/tan(kappa[i])+segment_lenght[i])*cos(phi[i]);
-                exit_point_calculation.c[1]=(dislocation_depth/tan(kappa[i])+segment_lenght[i])*sin(phi[i]);
+                if(kappa[i]>=(PI_2-0.005*PI_2) && kappa[i]<=(PI_2+0.005*PI_2)){
+                    exit_point_calculation.c[0]=INF;
+                    exit_point_calculation.c[1]=INF;
+                }
+                else{
+                    exit_point_calculation.c[0]=(dislocation_depth/tan(kappa[i])+segment_lenght[i])*cos(phi[i]);
+                    exit_point_calculation.c[1]=(dislocation_depth/tan(kappa[i])+segment_lenght[i])*sin(phi[i]);
+                }
             }
             exit_point.push_back(exit_point_calculation);
         }
@@ -1001,8 +1043,10 @@ int main(int argc, const char * argv[]) {
     std::vector<double> segment_lenght;
     segment_lenght.push_back(0);
     segment_lenght.push_back(0);
+    //Nu
+    double nu=0.4;
     //Start of initialization
-    InitialisationGeometry *init_obj = new InitialisationGeometry(diffraction_vector, normal_vector,tay_vector, burgers_vector, number_of_dislocation,dislocation_depth,segment_lenght);
+//    InitialisationGeometry *init_obj = new InitialisationGeometry(diffraction_vector, normal_vector,tay_vector, burgers_vector, number_of_dislocation,dislocation_depth,segment_lenght);
 //    AngularDislocation *test = new AngularDislocation();
 //    test->burgers_vector=burgers_vector;
 //    test->depth=dislocation_depth;
@@ -1032,5 +1076,11 @@ int main(int argc, const char * argv[]) {
 //    std::cout<<test1->uzxcalc(5, 5, 5)<<std::endl;
 //    std::cout<<test1->uzycalc(5, 5, 5)<<std::endl;
 //    std::cout<<test1->uzzcalc(5, 5, 5)<<std::endl;
+//    Vector<double> exit_point_coordinates;
+//    exit_point_coordinates.c[0]=-1;
+//    exit_point_coordinates.c[1]=-1;
+//    exit_point_coordinates.c[2]=-1;
+//    DisplacmentGradientSystemReplace *test2 = new DisplacmentGradientSystemReplace(0.4, dislocation_depth, 1.0, 1.0, exit_point_coordinates,burgers_vector, 2);
+    InitialisationGeometry *init_obj = new InitialisationGeometry(diffraction_vector, normal_vector, tay_vector, segment_lenght, dislocation_depth, nu, burgers_vector, number_of_dislocation);
     return 0;
 }
