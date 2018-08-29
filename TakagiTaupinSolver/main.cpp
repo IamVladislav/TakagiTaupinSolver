@@ -139,11 +139,12 @@ class BeamDislocation: public DisplacmentGradient{//untested
 public:
     double theta;
     Parallel_Shfit *parallel_shift;
-    BeamDislocation(double nu, double kappa, Vector<double> exit_point_coordinate, Vector<double> burgers_vector){
+    BeamDislocation(double nu, double kappa, Vector<double> exit_point_coordinate, double segment_lenght, Vector<double> burgers_vector){
         this->nu=nu;
         this->kappa=kappa;
+        this->segment_lenght=segment_lenght;
         theta=kappa-PI_2;
-        parallel_shift = new Parallel_Shfit(sqrt(pow(exit_point_coordinate.c[0],2)+pow(exit_point_coordinate.c[1],2)), 0, exit_point_coordinate.c[2]);
+        parallel_shift = new Parallel_Shfit(sqrt(pow(exit_point_coordinate.c[0],2)+pow(exit_point_coordinate.c[1],2))+segment_lenght, 0, exit_point_coordinate.c[2]);
         Rotation_Matrix_Y_Vector *burgers_vector_rotate = new Rotation_Matrix_Y_Vector(theta);
         burgers_vector_rotate->Basis(burgers_vector);
         this->burgers_vector=burgers_vector_rotate->vector;
@@ -544,13 +545,20 @@ public:
 
 class AngularDislocation: public DisplacmentGradient{
 public:
-    AngularDislocation(double nu, double kappa, Vector<double> burgers_vector){
+    Parallel_Shfit *parallel_shift;
+    AngularDislocation(double nu, double kappa, double segment_lenght, Vector<double> burgers_vector){
         this->nu=nu;
         this->kappa=kappa;
+        this->segment_lenght=segment_lenght;
         this->burgers_vector=burgers_vector;
+        parallel_shift = new Parallel_Shfit(segment_lenght, 0, 0);
     }
     double uxxcalc(double x, double y, double z) override
     {
+        parallel_shift->Basis(x, y, z);
+        x=parallel_shift->xc;
+        y=parallel_shift->yc;
+        z=parallel_shift->zc;
         double r1 = pow(x,2);
         double r2 = pow(y,2);
         double r3 = pow(z,2);
@@ -582,6 +590,10 @@ public:
     }
     double uxycalc(double x, double y, double z) override
     {
+        parallel_shift->Basis(x, y, z);
+        x=parallel_shift->xc;
+        y=parallel_shift->yc;
+        z=parallel_shift->zc;
         double r1 = pow(x,2);
         double r2 = pow(y,2);
         double r3 = pow(z,2);
@@ -612,6 +624,10 @@ public:
     }
     double uxzcalc(double x, double y, double z) override
     {
+        parallel_shift->Basis(x, y, z);
+        x=parallel_shift->xc;
+        y=parallel_shift->yc;
+        z=parallel_shift->zc;
         double r1 = pow(x,2);
         double r2 = pow(y,2);
         double r3 = pow(z,2);
@@ -642,6 +658,10 @@ public:
     }
     double uyxcalc(double x, double y, double z) override
     {
+        parallel_shift->Basis(x, y, z);
+        x=parallel_shift->xc;
+        y=parallel_shift->yc;
+        z=parallel_shift->zc;
         double r1 = pow(y,2);
         double r2 = pow(x,2);
         double r3 = pow(z,2);
@@ -673,6 +693,10 @@ public:
     }
     double uyycalc(double x, double y, double z) override
     {
+        parallel_shift->Basis(x, y, z);
+        x=parallel_shift->xc;
+        y=parallel_shift->yc;
+        z=parallel_shift->zc;
         double r1 = pow(y,2);
         double r2 = pow(x,2);
         double r3 = pow(z,2);
@@ -705,6 +729,10 @@ public:
     }
     double uyzcalc(double x, double y, double z) override
     {
+        parallel_shift->Basis(x, y, z);
+        x=parallel_shift->xc;
+        y=parallel_shift->yc;
+        z=parallel_shift->zc;
         double r1 = pow(y,2);
         double r2 = pow(x,2);
         double r3 = pow(z,2);
@@ -736,6 +764,10 @@ public:
     }
     double uzxcalc(double x, double y, double z) override
     {
+        parallel_shift->Basis(x, y, z);
+        x=parallel_shift->xc;
+        y=parallel_shift->yc;
+        z=parallel_shift->zc;
         double r1 = pow(x,2);
         double r2 = pow(y,2);
         double r3 = pow(z,2);
@@ -761,6 +793,10 @@ public:
     }
     double uzycalc(double x, double y, double z) override
     {
+        parallel_shift->Basis(x, y, z);
+        x=parallel_shift->xc;
+        y=parallel_shift->yc;
+        z=parallel_shift->zc;
         double r1 = pow(x,2);
         double r2 = pow(y,2);
         double r3 = pow(z,2);
@@ -786,6 +822,10 @@ public:
     }
     double uzzcalc(double x, double y, double z) override
     {
+        parallel_shift->Basis(x, y, z);
+        x=parallel_shift->xc;
+        y=parallel_shift->yc;
+        z=parallel_shift->zc;
         double r1 = pow(x,2);
         double r2 = pow(y,2);
         double r3 = pow(z,2);
@@ -817,8 +857,8 @@ public:
     Rotation_Matrix_Z_Vector *rotate_vector;
     DisplacmentGradient *distortion_gradients;
     Vector<double> exit_point_coordinate;
-    double phi;
-    DisplacmentGradientSystemReplace(double nu, double depth, double phi, double kappa, Vector<double> exit_point_coordinate, Vector<double> burgers_vector, int type)//mock
+    double phi, segment_lenght;
+    DisplacmentGradientSystemReplace(double nu, double depth, double phi, double kappa, Vector<double> exit_point_coordinate, double segment_lenght, Vector<double> burgers_vector, int type)//mock
     {
         rotate = new Rotation_Matrix_Z(phi);
         rotate_vector = new Rotation_Matrix_Z_Vector(phi);
@@ -826,15 +866,16 @@ public:
         this->depth=depth;
         this->nu=nu;
         this->kappa=kappa;
+        this->segment_lenght=segment_lenght;
         this->exit_point_coordinate=exit_point_coordinate;
         rotate_vector->Basis(burgers_vector);
         this->burgers_vector=rotate_vector->vector;
         switch (type) {
             case 1:
-                distortion_gradients=new AngularDislocation(this->nu, this->kappa,this->burgers_vector);
+                distortion_gradients=new AngularDislocation(this->nu, this->kappa, this->segment_lenght, this->burgers_vector);
                 break;
             case 2:
-                distortion_gradients=new BeamDislocation(this->nu, this->kappa, this->exit_point_coordinate, this->burgers_vector);
+                distortion_gradients=new BeamDislocation(this->nu, this->kappa, this->exit_point_coordinate, this->segment_lenght, this->burgers_vector);
                 break;
             default:
                 break;
@@ -916,19 +957,19 @@ public:
         this->dislocation_depth=dislocation_depth;
         Angle_Between_Dislocation_Axis_And_Calculation_Axis(direction_vector_list);
         Exit_Point_Coordinate(direction_vector_list, segment_lenght);
-        Model_Creation(direction_vector_list);
+        Model_Creation(direction_vector_list, segment_lenght);
     }
-    void Model_Creation(std::vector <Vector<double>> direction_vector_list){//mock
+    void Model_Creation(std::vector <Vector<double>> direction_vector_list, std::vector <double> segment_lenght){//mock
         for(int i=0;i<direction_vector_list.size();i++){
             if(exit_point[i].c[0]>=(INF-0.01*INF) && exit_point[i].c[0]<=(INF+0.01*INF)){
-                DisplacmentGradientSystemReplace angular_dislocation(this->nu, this->dislocation_depth, this->phi[i], this->kappa[i], this->exit_point[i], this->b_vector, 1);
+                DisplacmentGradientSystemReplace angular_dislocation(this->nu, this->dislocation_depth, this->phi[i], this->kappa[i], this->exit_point[i], segment_lenght[i],this->b_vector, 1);
                 final_model.push_back(angular_dislocation);
                 std::cout<<"Parallel segment created!"<<std::endl;
             }
             else{
-                DisplacmentGradientSystemReplace angular_dislocation(this->nu, this->dislocation_depth, this->phi[i], this->kappa[i], this->exit_point[i], this->b_vector, 1);
+                DisplacmentGradientSystemReplace angular_dislocation(this->nu, this->dislocation_depth, this->phi[i], this->kappa[i], this->exit_point[i], segment_lenght[i], this->b_vector, 1);
                 final_model.push_back(angular_dislocation);
-                DisplacmentGradientSystemReplace beam_dislocation(this->nu, this->dislocation_depth, this->phi[i], this->kappa[i], this->exit_point[i], this->b_vector, 2);
+                DisplacmentGradientSystemReplace beam_dislocation(this->nu, this->dislocation_depth, this->phi[i], this->kappa[i], this->exit_point[i], segment_lenght[i], this->b_vector, 2);
                 final_model.push_back(beam_dislocation);
                 std::cout<<"Exit segment created!"<<std::endl;
             }
