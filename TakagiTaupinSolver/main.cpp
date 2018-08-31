@@ -851,7 +851,7 @@ public:
     }
 };
 
-class DisplacmentGradientSystemReplace: public virtual DisplacmentGradient{
+class DisplacmentGradientSystemReplace: public DisplacmentGradient{
 public:
     Rotation_Matrix_Z *rotate;
     Rotation_Matrix_Z_Vector *rotate_vector;
@@ -931,6 +931,77 @@ public:
     }
 };
 
+class Model_Of_Polygonal_Dislocation: public DisplacmentGradient{
+public:
+    std::vector <DisplacmentGradientSystemReplace> final_model;
+    Model_Of_Polygonal_Dislocation(std::vector <DisplacmentGradientSystemReplace> final_model){
+        this->final_model=final_model;
+    }
+    double uxxcalc(double x, double y, double z){
+        double uxx=0;
+        for(int i=0;i<final_model.size();i++){
+            uxx=final_model[i].uxxcalc(x, y, z)+uxx;
+        }
+        return uxx;
+    }
+    double uxycalc(double x, double y, double z){
+        double uxy=0;
+        for(int i=0;i<final_model.size();i++){
+            uxy=final_model[i].uxycalc(x, y, z)+uxy;
+        }
+        return uxy;
+    }
+    double uxzcalc(double x, double y, double z){
+        double uxz=0;
+        for(int i=0;i<final_model.size();i++){
+            uxz=final_model[i].uxzcalc(x, y, z)+uxz;
+        }
+        return uxz;
+    }
+    double uyxcalc(double x, double y, double z){
+        double uyx=0;
+        for(int i=0;i<final_model.size();i++){
+            uyx=final_model[i].uyxcalc(x, y, z)+uyx;
+        }
+        return uyx;
+    }
+    double uyycalc(double x, double y, double z){
+        double uyy=0;
+        for(int i=0;i<final_model.size();i++){
+            uyy=final_model[i].uyycalc(x, y, z)+uyy;
+        }
+        return uyy;
+    }
+    double uyzcalc(double x, double y, double z){
+        double uyz=0;
+        for(int i=0;i<final_model.size();i++){
+            uyz=final_model[i].uyzcalc(x, y, z)+uyz;
+        }
+        return uyz;
+    }
+    double uzxcalc(double x, double y, double z){
+        double uzx=0;
+        for(int i=0;i<final_model.size();i++){
+            uzx=final_model[i].uzxcalc(x, y, z)+uzx;
+        }
+        return uzx;
+    }
+    double uzycalc(double x, double y, double z){
+        double uzy=0;
+        for(int i=0;i<final_model.size();i++){
+            uzy=final_model[i].uzycalc(x, y, z)+uzy;
+        }
+        return uzy;
+    }
+    double uzzcalc(double x, double y, double z){
+        double uzz=0;
+        for(int i=0;i<final_model.size();i++){
+            uzz=final_model[i].uzzcalc(x, y, z)+uzz;
+        }
+        return uzz;
+    }
+};
+
 class InitialisationGeometry{
 public:
     Vector<double> x_vector,y_vector,z_vector, glide_plane_vector, b_vector;
@@ -974,6 +1045,10 @@ public:
                 std::cout<<"Exit segment created!"<<std::endl;
             }
         }
+    }
+    Model_Of_Polygonal_Dislocation* ModelOutput(){//mock
+        Model_Of_Polygonal_Dislocation* model = new Model_Of_Polygonal_Dislocation(final_model);
+        return model;
     }
     void Glide_Plane(std::vector <Vector<double>> direction_vector_list){//untested
         switch (direction_vector_list.size()) {
@@ -1123,5 +1198,9 @@ int main(int argc, const char * argv[]) {
 //    exit_point_coordinates.c[2]=-1;
 //    DisplacmentGradientSystemReplace *test2 = new DisplacmentGradientSystemReplace(0.4, dislocation_depth, 1.0, 1.0, exit_point_coordinates,burgers_vector, 2);
     InitialisationGeometry *init_obj = new InitialisationGeometry(diffraction_vector, normal_vector, tay_vector, segment_lenght, dislocation_depth, nu, burgers_vector, number_of_dislocation);
+    //Test
+    Model_Of_Polygonal_Dislocation *test;
+    test=init_obj->ModelOutput();
+    std::cout<<test->uxxcalc(10, 10, 10)<<std::endl;
     return 0;
 }
