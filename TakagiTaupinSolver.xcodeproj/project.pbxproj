@@ -104,6 +104,8 @@
 		C83D679321288E0000632623 /* Vector_And_Operations.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Vector_And_Operations.hpp; sourceTree = "<group>"; };
 		C8B4EAAB210DA87600D56735 /* TakagiTaupinSolver */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TakagiTaupinSolver; sourceTree = BUILT_PRODUCTS_DIR; };
 		C8B4EAAE210DA87600D56735 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		C8ED9A11213ABA6400382225 /* Distorsion_Source.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Distorsion_Source.cpp; sourceTree = "<group>"; };
+		C8ED9A12213ABA6400382225 /* Distorsion_Source.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Distorsion_Source.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
