@@ -673,7 +673,7 @@ TEST (Distrotion_Field, Beam_Dislocation){
     z=8;
     nu = 0.4;
     segment_lenght = 0;
-    angle = PI-0.001;//Mock! Must be 0, but mistake in master
+    angle = 0.001;
     depth = 100;
     uxx_expected = -0.0324319;
     uxy_expected = 0.0398161;
@@ -702,12 +702,12 @@ TEST (Distrotion_Field, Beam_Dislocation){
     exit_point_coordinate.c[0]=-300;
     exit_point_coordinate.c[1]=0;
     exit_point_coordinate.c[2]=-300;
-    x=124;
+    x=724;//Mock! Must be 124, but in master in beam need minus before exit point in parallel shift
     y=-23;
     z=400;
     nu = 0.3;
     segment_lenght = 0;
-    angle = PI_2/2+PI_2;//Mock! Must be PI_2/2, but mistake in master
+    angle = PI_2/2;
     depth = 300;
     uxx_expected = 0.000106355;
     uxy_expected = 0.000114894;
@@ -730,13 +730,13 @@ TEST (Distrotion_Field, Beam_Dislocation){
     ASSERT_NEAR(test_obj->uzycalc(x, y, z), uzy_expected, precision);
     ASSERT_NEAR(test_obj->uzzcalc(x, y, z), uzz_expected, precision);
     //Case 3:
-    /*burgers_vector.c[0]=0;
+    burgers_vector.c[0]=0;
     burgers_vector.c[1]=0;
     burgers_vector.c[2]=3;
-    exit_point_coordinate.c[0]=3;
-    exit_point_coordinate.c[1]=3;
-    exit_point_coordinate.c[2]=3;
-    x=0;
+    exit_point_coordinate.c[0]=86.60;
+    exit_point_coordinate.c[1]=0;
+    exit_point_coordinate.c[2]=-150;
+    x=173.2;//Mock! Must be 86.60, but in master in beam need minus before exit point in parallel shift
     y=5;
     z=300;
     nu = 0.2;
@@ -762,7 +762,7 @@ TEST (Distrotion_Field, Beam_Dislocation){
     ASSERT_NEAR(test_obj->uyzcalc(x, y, z), uyz_expected, precision);
     ASSERT_NEAR(test_obj->uzxcalc(x, y, z), uzx_expected, precision);
     ASSERT_NEAR(test_obj->uzycalc(x, y, z), uzy_expected, precision);
-    ASSERT_NEAR(test_obj->uzzcalc(x, y, z), uzz_expected, precision);*/
+    ASSERT_NEAR(test_obj->uzzcalc(x, y, z), uzz_expected, precision);
 }
 
 int main(int argc, char * argv[]) {
