@@ -9,8 +9,8 @@
 #ifndef Distorsion_Source_hpp
 #define Distorsion_Source_hpp
 
-const double PI_2=1.5708;
-const double PI=3.14159;
+const double PI_2=1.570796326794897;
+const double PI=3.141592653589793;
 const double INF=10001;
 
 #include <stdio.h>
