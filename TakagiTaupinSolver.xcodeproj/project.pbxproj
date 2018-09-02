@@ -10,6 +10,7 @@
 		C8267AC1213A702E00984B18 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C8267AC0213A702E00984B18 /* main.cpp */; };
 		C8267AE2213A711F00984B18 /* gtest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C8267AD2213A706B00984B18 /* gtest.framework */; };
 		C83D679421288E0000632623 /* Vector_And_Operations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C83D679221288E0000632623 /* Vector_And_Operations.cpp */; };
+		C8A95A22213C1D6600D83B2A /* Distorsion_Source.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C8A95A18213C1D6600D83B2A /* Distorsion_Source.cpp */; };
 		C8B4EAAF210DA87600D56735 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C8B4EAAE210DA87600D56735 /* main.cpp */; };
 		C8ED9A10213AAE9E00382225 /* System_Repclacement_Library.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C80D58AD213A8F2D00A69F2A /* System_Repclacement_Library.cpp */; };
 /* End PBXBuildFile section */
@@ -102,10 +103,10 @@
 		C8267AC5213A706B00984B18 /* gtest.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = gtest.xcodeproj; path = googletest/googletest/xcode/gtest.xcodeproj; sourceTree = SOURCE_ROOT; };
 		C83D679221288E0000632623 /* Vector_And_Operations.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Vector_And_Operations.cpp; sourceTree = "<group>"; };
 		C83D679321288E0000632623 /* Vector_And_Operations.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Vector_And_Operations.hpp; sourceTree = "<group>"; };
+		C8A95A18213C1D6600D83B2A /* Distorsion_Source.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Distorsion_Source.cpp; sourceTree = "<group>"; };
+		C8A95A21213C1D6600D83B2A /* Distorsion_Source.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Distorsion_Source.hpp; sourceTree = "<group>"; };
 		C8B4EAAB210DA87600D56735 /* TakagiTaupinSolver */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TakagiTaupinSolver; sourceTree = BUILT_PRODUCTS_DIR; };
 		C8B4EAAE210DA87600D56735 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		C8ED9A11213ABA6400382225 /* Distorsion_Source.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Distorsion_Source.cpp; sourceTree = "<group>"; };
-		C8ED9A12213ABA6400382225 /* Distorsion_Source.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Distorsion_Source.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -179,6 +180,8 @@
 		C8B4EAAD210DA87600D56735 /* TakagiTaupinSolver */ = {
 			isa = PBXGroup;
 			children = (
+				C8A95A18213C1D6600D83B2A /* Distorsion_Source.cpp */,
+				C8A95A21213C1D6600D83B2A /* Distorsion_Source.hpp */,
 				C8B4EAAE210DA87600D56735 /* main.cpp */,
 				C83D679221288E0000632623 /* Vector_And_Operations.cpp */,
 				C83D679321288E0000632623 /* Vector_And_Operations.hpp */,
@@ -332,6 +335,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C8A95A22213C1D6600D83B2A /* Distorsion_Source.cpp in Sources */,
 				C83D679421288E0000632623 /* Vector_And_Operations.cpp in Sources */,
 				C8ED9A10213AAE9E00382225 /* System_Repclacement_Library.cpp in Sources */,
 				C8B4EAAF210DA87600D56735 /* main.cpp in Sources */,

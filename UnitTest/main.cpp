@@ -13,6 +13,7 @@
 #include "Vector_And_Operations.hpp"
 #include "System_Repclacement_Library.hpp"
 #include "/Users/vladislavmetel/Desktop/TakagiTaupinSolver/TakagiTaupinSolver/System_Repclacement_Library.cpp"
+#include "/Users/vladislavmetel/Desktop/TakagiTaupinSolver/TakagiTaupinSolver/Distorsion_Source.cpp"
 
 TEST (Vector_Operation_Test, Equals) {
     Vector<double> first_vector;
@@ -553,6 +554,215 @@ TEST (System_Replacement, Rotation_Matrix_Y_Vector){
     ASSERT_NEAR(test_object->vector_inv.c[0],vectorinv_expected.c[0],0.01);
     ASSERT_NEAR(test_object->vector_inv.c[1],vectorinv_expected.c[1],0.01);
     ASSERT_NEAR(test_object->vector_inv.c[2],vectorinv_expected.c[2],0.01);
+}
+
+TEST (Distrotion_Field, Angular_Dislocation){
+    Vector<double> burgers_vector;
+    double x, y, z, angle, depth, nu, segment_lenght, uxx_expected, uxy_expected, uxz_expected, uyx_expected,uyy_expected,uyz_expected,uzx_expected,uzy_expected,uzz_expected;
+    AngularDislocation *test_obj;
+    double precision = 0.000001;
+    //Case 1:
+    burgers_vector.c[0]=3;
+    burgers_vector.c[1]=3;
+    burgers_vector.c[2]=3;
+    x=5;
+    y=6;
+    z=8;
+    nu = 0.4;
+    segment_lenght = 0;
+    angle = PI_2-0.01*PI_2;
+    depth = 100;
+    uxx_expected = 0.0633306;
+    uxy_expected = -0.0689766;
+    uxz_expected = 0.00845708;
+    uyx_expected = 0.0823332;
+    uyy_expected = -0.0984343;
+    uyz_expected = 0.0308324;
+    uzx_expected = 0.0266809;
+    uzy_expected = -0.0725122;
+    uzz_expected = 0.0348514;
+    test_obj = new AngularDislocation(nu, angle, segment_lenght, burgers_vector);
+    test_obj->depth = depth;//mock!!!!
+    ASSERT_NEAR(test_obj->uxxcalc(x, y, z), uxx_expected, precision);
+    ASSERT_NEAR(test_obj->uxycalc(x, y, z), uxy_expected, precision);
+    ASSERT_NEAR(test_obj->uxzcalc(x, y, z), uxz_expected, precision);
+    ASSERT_NEAR(test_obj->uyxcalc(x, y, z), uyx_expected, precision);
+    ASSERT_NEAR(test_obj->uyycalc(x, y, z), uyy_expected, precision);
+    ASSERT_NEAR(test_obj->uyzcalc(x, y, z), uyz_expected, precision);
+    ASSERT_NEAR(test_obj->uzxcalc(x, y, z), uzx_expected, precision);
+    ASSERT_NEAR(test_obj->uzycalc(x, y, z), uzy_expected, precision);
+    ASSERT_NEAR(test_obj->uzzcalc(x, y, z), uzz_expected, precision);
+    //Case 2:
+    burgers_vector.c[0]=3;
+    burgers_vector.c[1]=-1;
+    burgers_vector.c[2]=3;
+    x=124;
+    y=-23;
+    z=400;
+    nu = 0.3;
+    segment_lenght = 0;
+    angle = PI_2/2;
+    depth = 300;
+    uxx_expected = -0.000532479;
+    uxy_expected = -0.0085049;
+    uxz_expected = -0.000302145;
+    uyx_expected = 0.00127729;
+    uyy_expected = 0.001341;
+    uyz_expected = -0.000289173;
+    uzx_expected = -0.000609022;
+    uzy_expected = -0.0051017;
+    uzz_expected = -0.0000574385;
+    test_obj = new AngularDislocation(nu, angle, segment_lenght, burgers_vector);
+    test_obj->depth = depth;//mock!!!!
+    ASSERT_NEAR(test_obj->uxxcalc(x, y, z), uxx_expected, precision);
+    ASSERT_NEAR(test_obj->uxycalc(x, y, z), uxy_expected, precision);
+    ASSERT_NEAR(test_obj->uxzcalc(x, y, z), uxz_expected, precision);
+    ASSERT_NEAR(test_obj->uyxcalc(x, y, z), uyx_expected, precision);
+    ASSERT_NEAR(test_obj->uyycalc(x, y, z), uyy_expected, precision);
+    ASSERT_NEAR(test_obj->uyzcalc(x, y, z), uyz_expected, precision);
+    ASSERT_NEAR(test_obj->uzxcalc(x, y, z), uzx_expected, precision);
+    ASSERT_NEAR(test_obj->uzycalc(x, y, z), uzy_expected, precision);
+    ASSERT_NEAR(test_obj->uzzcalc(x, y, z), uzz_expected, precision);
+    //Case 3:
+    burgers_vector.c[0]=0;
+    burgers_vector.c[1]=0;
+    burgers_vector.c[2]=3;
+    x=0;
+    y=5;
+    z=300;
+    nu = 0.2;
+    segment_lenght = 100;
+    angle = PI_2/3;
+    depth = 150;
+    uxx_expected = 0.000011972;
+    uxy_expected = 0.000591855;
+    uxz_expected = -5.809652113384596e-6;
+    uyx_expected = -0.000390611;
+    uyy_expected = -0.0000142997;
+    uyz_expected = -0.000111124;
+    uzx_expected = 0.000197452;
+    uzy_expected = 0.00333298;
+    uzz_expected = 0.0000133638;
+    test_obj = new AngularDislocation(nu, angle, segment_lenght, burgers_vector);
+    test_obj->depth = depth;//mock!!!!
+    ASSERT_NEAR(test_obj->uxxcalc(x, y, z), uxx_expected, precision);
+    ASSERT_NEAR(test_obj->uxycalc(x, y, z), uxy_expected, precision);
+    ASSERT_NEAR(test_obj->uxzcalc(x, y, z), uxz_expected, precision);
+    ASSERT_NEAR(test_obj->uyxcalc(x, y, z), uyx_expected, precision);
+    ASSERT_NEAR(test_obj->uyycalc(x, y, z), uyy_expected, precision);
+    ASSERT_NEAR(test_obj->uyzcalc(x, y, z), uyz_expected, precision);
+    ASSERT_NEAR(test_obj->uzxcalc(x, y, z), uzx_expected, precision);
+    ASSERT_NEAR(test_obj->uzycalc(x, y, z), uzy_expected, precision);
+    ASSERT_NEAR(test_obj->uzzcalc(x, y, z), uzz_expected, precision);
+}
+
+TEST (Distrotion_Field, Beam_Dislocation){
+    Vector<double> burgers_vector, exit_point_coordinate;
+    double x, y, z, angle, depth, nu, segment_lenght, uxx_expected, uxy_expected, uxz_expected, uyx_expected,uyy_expected,uyz_expected,uzx_expected,uzy_expected,uzz_expected;
+    BeamDislocation *test_obj;
+    double precision = 0.000001;
+    //Case 1:
+    burgers_vector.c[0]=3;
+    burgers_vector.c[1]=3;
+    burgers_vector.c[2]=3;
+    exit_point_coordinate.c[0]=0;
+    exit_point_coordinate.c[1]=0;
+    exit_point_coordinate.c[2]=-100;
+    x=5;
+    y=6;
+    z=8;
+    nu = 0.4;
+    segment_lenght = 0;
+    angle = PI-0.001;//Mock! Must be 0, but mistake in master
+    depth = 100;
+    uxx_expected = -0.0324319;
+    uxy_expected = 0.0398161;
+    uxz_expected = -0.000268429;
+    uyx_expected = -0.0557858;
+    uyy_expected = 0.0455453;
+    uyz_expected = 0.000052383;
+    uzx_expected = 0.00326004;
+    uzy_expected = -0.0000476335;
+    uzz_expected = -0.000148723;
+    test_obj = new BeamDislocation(nu, angle, exit_point_coordinate, segment_lenght, burgers_vector);
+    test_obj->depth = depth;//mock!!!!
+    ASSERT_NEAR(test_obj->uxxcalc(x, y, z), uxx_expected, precision);
+    ASSERT_NEAR(test_obj->uxycalc(x, y, z), uxy_expected, precision);
+    ASSERT_NEAR(test_obj->uxzcalc(x, y, z), uxz_expected, precision);
+    ASSERT_NEAR(test_obj->uyxcalc(x, y, z), uyx_expected, precision);
+    ASSERT_NEAR(test_obj->uyycalc(x, y, z), uyy_expected, precision);
+    ASSERT_NEAR(test_obj->uyzcalc(x, y, z), uyz_expected, precision);
+    ASSERT_NEAR(test_obj->uzxcalc(x, y, z), uzx_expected, precision);
+    ASSERT_NEAR(test_obj->uzycalc(x, y, z), uzy_expected, precision);
+    ASSERT_NEAR(test_obj->uzzcalc(x, y, z), uzz_expected, precision);
+    //Case 2:
+    burgers_vector.c[0]=3;
+    burgers_vector.c[1]=-1;
+    burgers_vector.c[2]=3;
+    exit_point_coordinate.c[0]=-300;
+    exit_point_coordinate.c[1]=0;
+    exit_point_coordinate.c[2]=-300;
+    x=124;
+    y=-23;
+    z=400;
+    nu = 0.3;
+    segment_lenght = 0;
+    angle = PI_2/2+PI_2;//Mock! Must be PI_2/2, but mistake in master
+    depth = 300;
+    uxx_expected = 0.000106355;
+    uxy_expected = 0.000114894;
+    uxz_expected = -0.0000872828;
+    uyx_expected = -0.0000203221;
+    uyy_expected = 0.000186361;
+    uyz_expected = 0.0000184327;
+    uzx_expected = -0.000216968;
+    uzy_expected = -0.000115296;
+    uzz_expected = 0.00015427;
+    test_obj = new BeamDislocation(nu, angle, exit_point_coordinate, segment_lenght, burgers_vector);
+    test_obj->depth = depth;//mock!!!!
+    ASSERT_NEAR(test_obj->uxxcalc(x, y, z), uxx_expected, precision);
+    ASSERT_NEAR(test_obj->uxycalc(x, y, z), uxy_expected, precision);
+    ASSERT_NEAR(test_obj->uxzcalc(x, y, z), uxz_expected, precision);
+    ASSERT_NEAR(test_obj->uyxcalc(x, y, z), uyx_expected, precision);
+    ASSERT_NEAR(test_obj->uyycalc(x, y, z), uyy_expected, precision);
+    ASSERT_NEAR(test_obj->uyzcalc(x, y, z), uyz_expected, precision);
+    ASSERT_NEAR(test_obj->uzxcalc(x, y, z), uzx_expected, precision);
+    ASSERT_NEAR(test_obj->uzycalc(x, y, z), uzy_expected, precision);
+    ASSERT_NEAR(test_obj->uzzcalc(x, y, z), uzz_expected, precision);
+    //Case 3:
+    /*burgers_vector.c[0]=0;
+    burgers_vector.c[1]=0;
+    burgers_vector.c[2]=3;
+    exit_point_coordinate.c[0]=3;
+    exit_point_coordinate.c[1]=3;
+    exit_point_coordinate.c[2]=3;
+    x=0;
+    y=5;
+    z=300;
+    nu = 0.2;
+    segment_lenght = 100;
+    angle = PI_2/3;
+    depth = 150;
+    uxx_expected = 0.000011972;
+    uxy_expected = 0.000591855;
+    uxz_expected = -5.809652113384596e-6;
+    uyx_expected = -0.000390611;
+    uyy_expected = -0.0000142997;
+    uyz_expected = -0.000111124;
+    uzx_expected = 0.000197452;
+    uzy_expected = 0.00333298;
+    uzz_expected = 0.0000133638;
+    test_obj = new BeamDislocation(nu, angle, exit_point_coordinate, segment_lenght, burgers_vector);
+    test_obj->depth = depth;//mock!!!!
+    ASSERT_NEAR(test_obj->uxxcalc(x, y, z), uxx_expected, precision);
+    ASSERT_NEAR(test_obj->uxycalc(x, y, z), uxy_expected, precision);
+    ASSERT_NEAR(test_obj->uxzcalc(x, y, z), uxz_expected, precision);
+    ASSERT_NEAR(test_obj->uyxcalc(x, y, z), uyx_expected, precision);
+    ASSERT_NEAR(test_obj->uyycalc(x, y, z), uyy_expected, precision);
+    ASSERT_NEAR(test_obj->uyzcalc(x, y, z), uyz_expected, precision);
+    ASSERT_NEAR(test_obj->uzxcalc(x, y, z), uzx_expected, precision);
+    ASSERT_NEAR(test_obj->uzycalc(x, y, z), uzy_expected, precision);
+    ASSERT_NEAR(test_obj->uzzcalc(x, y, z), uzz_expected, precision);*/
 }
 
 int main(int argc, char * argv[]) {
