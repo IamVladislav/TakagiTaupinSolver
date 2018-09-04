@@ -14,7 +14,7 @@ BeamDislocation::BeamDislocation(double nu, double kappa, double dislocation_dep
     this->segment_lenght=segment_lenght;
     this->depth=dislocation_depth;
     theta=PI_2-kappa;
-    parallel_shift = new Parallel_Shfit(sqrt(pow(exit_point_coordinate.c[0],2)+pow(exit_point_coordinate.c[1],2))+segment_lenght, 0, exit_point_coordinate.c[2]);
+    parallel_shift = new Parallel_Shfit(-(sqrt(pow(exit_point_coordinate.c[0],2)+pow(exit_point_coordinate.c[1],2))+segment_lenght), 0, exit_point_coordinate.c[2]);
     Rotation_Matrix_Y_Vector *burgers_vector_rotate = new Rotation_Matrix_Y_Vector(theta);
     burgers_vector_rotate->Basis(burgers_vector);
     this->burgers_vector=burgers_vector_rotate->vector;
