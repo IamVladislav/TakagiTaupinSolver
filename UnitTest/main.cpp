@@ -707,7 +707,7 @@ TEST (Distrotion_Field, Beam_Dislocation){
     exit_point_coordinate.c[0]=-300;
     exit_point_coordinate.c[1]=0;
     exit_point_coordinate.c[2]=-300;
-    x=724;//Mock! Must be 124, but in master in beam need minus before exit point in parallel shift
+    x=124;
     y=-23;
     z=400;
     nu = 0.3;
@@ -740,7 +740,7 @@ TEST (Distrotion_Field, Beam_Dislocation){
     exit_point_coordinate.c[0]=86.60;
     exit_point_coordinate.c[1]=0;
     exit_point_coordinate.c[2]=-150;
-    x=173.2+200;//Mock! Must be 0, but in master in beam need minus before exit point in parallel shift
+    x=0;
     y=5;
     z=300;
     nu = 0.2;
