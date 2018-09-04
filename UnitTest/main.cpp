@@ -557,7 +557,7 @@ TEST (System_Replacement, Rotation_Matrix_Y_Vector){
 }
 
 TEST (Distrotion_Field, Angular_Dislocation){
-    Vector<double> burgers_vector;
+    Vector<double> burgers_vector, exit_point_coordinate;
     double x, y, z, angle, depth, nu, segment_lenght, uxx_expected, uxy_expected, uxz_expected, uyx_expected,uyy_expected,uyz_expected,uzx_expected,uzy_expected,uzz_expected;
     AngularDislocation *test_obj;
     double precision = 0.000001;
@@ -565,6 +565,9 @@ TEST (Distrotion_Field, Angular_Dislocation){
     burgers_vector.c[0]=3;
     burgers_vector.c[1]=3;
     burgers_vector.c[2]=3;
+    exit_point_coordinate.c[0]=INF;
+    exit_point_coordinate.c[1]=INF;
+    exit_point_coordinate.c[2]=-100;
     x=5;
     y=6;
     z=8;
@@ -581,8 +584,7 @@ TEST (Distrotion_Field, Angular_Dislocation){
     uzx_expected = 0.0266809;
     uzy_expected = -0.0725122;
     uzz_expected = 0.0348514;
-    test_obj = new AngularDislocation(nu, angle, segment_lenght, burgers_vector);
-    test_obj->depth = depth;//mock!!!!
+    test_obj = new AngularDislocation(nu, angle, depth, exit_point_coordinate, segment_lenght, burgers_vector);
     ASSERT_NEAR(test_obj->uxxcalc(x, y, z), uxx_expected, precision);
     ASSERT_NEAR(test_obj->uxycalc(x, y, z), uxy_expected, precision);
     ASSERT_NEAR(test_obj->uxzcalc(x, y, z), uxz_expected, precision);
@@ -596,6 +598,9 @@ TEST (Distrotion_Field, Angular_Dislocation){
     burgers_vector.c[0]=3;
     burgers_vector.c[1]=-1;
     burgers_vector.c[2]=3;
+    exit_point_coordinate.c[0]=INF;
+    exit_point_coordinate.c[1]=INF;
+    exit_point_coordinate.c[2]=-300;
     x=124;
     y=-23;
     z=400;
@@ -612,8 +617,7 @@ TEST (Distrotion_Field, Angular_Dislocation){
     uzx_expected = -0.000609022;
     uzy_expected = -0.0051017;
     uzz_expected = -0.0000574385;
-    test_obj = new AngularDislocation(nu, angle, segment_lenght, burgers_vector);
-    test_obj->depth = depth;//mock!!!!
+    test_obj = new AngularDislocation(nu, angle, depth, exit_point_coordinate, segment_lenght, burgers_vector);
     ASSERT_NEAR(test_obj->uxxcalc(x, y, z), uxx_expected, precision);
     ASSERT_NEAR(test_obj->uxycalc(x, y, z), uxy_expected, precision);
     ASSERT_NEAR(test_obj->uxzcalc(x, y, z), uxz_expected, precision);
@@ -627,6 +631,9 @@ TEST (Distrotion_Field, Angular_Dislocation){
     burgers_vector.c[0]=0;
     burgers_vector.c[1]=0;
     burgers_vector.c[2]=3;
+    exit_point_coordinate.c[0]=INF;
+    exit_point_coordinate.c[1]=INF;
+    exit_point_coordinate.c[2]=-150;
     x=0;
     y=5;
     z=300;
@@ -643,8 +650,7 @@ TEST (Distrotion_Field, Angular_Dislocation){
     uzx_expected = 0.000197452;
     uzy_expected = 0.00333298;
     uzz_expected = 0.0000133638;
-    test_obj = new AngularDislocation(nu, angle, segment_lenght, burgers_vector);
-    test_obj->depth = depth;//mock!!!!
+    test_obj = new AngularDislocation(nu, angle, depth, exit_point_coordinate, segment_lenght, burgers_vector);
     ASSERT_NEAR(test_obj->uxxcalc(x, y, z), uxx_expected, precision);
     ASSERT_NEAR(test_obj->uxycalc(x, y, z), uxy_expected, precision);
     ASSERT_NEAR(test_obj->uxzcalc(x, y, z), uxz_expected, precision);
@@ -684,8 +690,7 @@ TEST (Distrotion_Field, Beam_Dislocation){
     uzx_expected = 0.0510608;
     uzy_expected = -0.0422474;
     uzz_expected = -0.0000172918;
-    test_obj = new BeamDislocation(nu, angle, exit_point_coordinate, segment_lenght, burgers_vector);
-    test_obj->depth = depth;//mock!!!!
+    test_obj = new BeamDislocation(nu, angle, depth, exit_point_coordinate, segment_lenght, burgers_vector);
     ASSERT_NEAR(test_obj->uxxcalc(x, y, z), uxx_expected, precision);
     ASSERT_NEAR(test_obj->uxycalc(x, y, z), uxy_expected, precision);
     ASSERT_NEAR(test_obj->uxzcalc(x, y, z), uxz_expected, precision);
@@ -718,8 +723,7 @@ TEST (Distrotion_Field, Beam_Dislocation){
     uzx_expected = -0.000562852;
     uzy_expected = 0.00301118;
     uzz_expected = 0.000466504;
-    test_obj = new BeamDislocation(nu, angle, exit_point_coordinate, segment_lenght, burgers_vector);
-    test_obj->depth = depth;//mock!!!!
+    test_obj = new BeamDislocation(nu, angle, depth, exit_point_coordinate, segment_lenght, burgers_vector);
     ASSERT_NEAR(test_obj->uxxcalc(x, y, z), uxx_expected, precision);
     ASSERT_NEAR(test_obj->uxycalc(x, y, z), uxy_expected, precision);
     ASSERT_NEAR(test_obj->uxzcalc(x, y, z), uxz_expected, precision);
@@ -752,8 +756,7 @@ TEST (Distrotion_Field, Beam_Dislocation){
     uzx_expected = 0.000136862;
     uzy_expected = 0.00178925;
     uzz_expected = -0.0000766326;
-    test_obj = new BeamDislocation(nu, angle, exit_point_coordinate, segment_lenght, burgers_vector);
-    test_obj->depth = depth;//mock!!!!
+    test_obj = new BeamDislocation(nu, angle, depth, exit_point_coordinate, segment_lenght, burgers_vector);
     ASSERT_NEAR(test_obj->uxxcalc(x, y, z), uxx_expected, precision);
     ASSERT_NEAR(test_obj->uxycalc(x, y, z), uxy_expected, precision);
     ASSERT_NEAR(test_obj->uxzcalc(x, y, z), uxz_expected, precision);
