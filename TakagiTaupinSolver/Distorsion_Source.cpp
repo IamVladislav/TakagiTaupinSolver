@@ -8,10 +8,11 @@
 
 #include "Distorsion_Source.hpp"
 
-BeamDislocation::BeamDislocation(double nu, double kappa, Vector<double> exit_point_coordinate, double segment_lenght, Vector<double> burgers_vector){
+BeamDislocation::BeamDislocation(double nu, double kappa, double dislocation_depth, Vector<double> exit_point_coordinate, double segment_lenght, Vector<double> burgers_vector){
     this->nu=nu;
     this->kappa=kappa;
     this->segment_lenght=segment_lenght;
+    this->depth=dislocation_depth;
     theta=PI_2-kappa;
     parallel_shift = new Parallel_Shfit(sqrt(pow(exit_point_coordinate.c[0],2)+pow(exit_point_coordinate.c[1],2))+segment_lenght, 0, exit_point_coordinate.c[2]);
     Rotation_Matrix_Y_Vector *burgers_vector_rotate = new Rotation_Matrix_Y_Vector(theta);
@@ -496,11 +497,12 @@ double BeamDislocation::uzzcalc(double x, double y, double z){
     return uzz;
 }
 
-AngularDislocation::AngularDislocation(double nu, double kappa, double segment_lenght, Vector<double> burgers_vector){
+AngularDislocation::AngularDislocation(double nu, double kappa, double dislocation_depth, Vector<double> exit_point_coordinate, double segment_lenght, Vector<double> burgers_vector){
     this->nu=nu;
     this->kappa=kappa;
     this->segment_lenght=segment_lenght;
     this->burgers_vector=burgers_vector;
+    this->depth=dislocation_depth;
     parallel_shift = new Parallel_Shfit(segment_lenght, 0, 0);
     }
 double AngularDislocation::uxxcalc(double x, double y, double z){
@@ -804,10 +806,10 @@ DisplacmentGradientSystemReplace::DisplacmentGradientSystemReplace(double nu, do
     this->burgers_vector=rotate_vector->vector;
     switch (type) {
         case 1:
-            distortion_gradients=new AngularDislocation(this->nu, this->kappa, this->segment_lenght, this->burgers_vector);
+            distortion_gradients=new AngularDislocation(this->nu, this->kappa, this->depth, this->exit_point_coordinate, this->segment_lenght, this->burgers_vector);
             break;
         case 2:
-            distortion_gradients=new BeamDislocation(this->nu, this->kappa, this->exit_point_coordinate, this->segment_lenght, this->burgers_vector);
+            distortion_gradients=new BeamDislocation(this->nu, this->kappa, this->depth, this->exit_point_coordinate, this->segment_lenght, this->burgers_vector);
             break;
         default:
             break;

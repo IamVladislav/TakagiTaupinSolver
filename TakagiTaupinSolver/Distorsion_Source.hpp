@@ -40,7 +40,7 @@ class BeamDislocation: public DisplacmentGradient{//untested
 public:
     double theta;
     Parallel_Shfit *parallel_shift;
-    BeamDislocation(double nu, double kappa, Vector<double> exit_point_coordinate, double segment_lenght, Vector<double> burgers_vector);
+    BeamDislocation(double nu, double kappa, double dislocation_depth, Vector<double> exit_point_coordinate, double segment_lenght, Vector<double> burgers_vector);
     double uxxcalc(double x, double y, double z);
     double uxycalc(double x, double y, double z);
     double uxzcalc(double x, double y, double z);
@@ -55,7 +55,7 @@ public:
 class AngularDislocation: public DisplacmentGradient{
 public:
     Parallel_Shfit *parallel_shift;
-    AngularDislocation(double nu, double kappa, double segment_lenght, Vector<double> burgers_vector);
+    AngularDislocation(double nu, double kappa, double dislocation_depth, Vector<double> exit_point_coordinate, double segment_lenght, Vector<double> burgers_vector);
     double uxxcalc(double x, double y, double z);
     double uxycalc(double x, double y, double z);
     double uxzcalc(double x, double y, double z);
