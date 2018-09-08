@@ -15,9 +15,9 @@ BeamDislocation::BeamDislocation(double nu, double kappa, double dislocation_dep
     this->depth=dislocation_depth;
     theta=PI_2-kappa;
     parallel_shift = new Parallel_Shfit(-(sqrt(pow(exit_point_coordinate.c[0],2)+pow(exit_point_coordinate.c[1],2))+segment_lenght), 0, exit_point_coordinate.c[2]);
-    Rotation_Matrix_Y_Vector *burgers_vector_rotate = new Rotation_Matrix_Y_Vector(theta);
-    burgers_vector_rotate->Basis(burgers_vector);
-    this->burgers_vector=burgers_vector_rotate->vector;
+    Rotation_Matrix_Y_Vector *burgers_vector_rotate = new Rotation_Matrix_Y_Vector(PI_2-theta);
+    burgers_vector_rotate->Basis_Inverse(burgers_vector);
+    this->burgers_vector=burgers_vector_rotate->vector_inv;
 }
 double BeamDislocation::uxxcalc(double x, double y, double z){
     parallel_shift->Basis(x, y, z);
@@ -823,34 +823,42 @@ double DisplacmentGradientSystemReplace::uxxcalc(double x, double y, double z){
     return uxx;
 }
 double DisplacmentGradientSystemReplace::uxycalc(double x, double y, double z){
+    rotate->Basis(x,y,z);
     double uxy=distortion_gradients->uxycalc (rotate -> xc, rotate -> yc, rotate -> zc)*pow(cos(phi), 2) + distortion_gradients->uxxcalc (rotate -> xc, rotate -> yc, rotate -> zc)*cos(phi)*sin(phi) - distortion_gradients->uyycalc (rotate -> xc, rotate -> yc, rotate -> zc)*cos(phi)*sin(phi) -distortion_gradients->uyxcalc(rotate -> xc, rotate -> yc, rotate -> zc)*pow(sin(phi), 2);
     return uxy;
 }
 double DisplacmentGradientSystemReplace::uxzcalc(double x, double y, double z){
+    rotate->Basis(x,y,z);
     double uxz=distortion_gradients->uxzcalc(rotate -> xc, rotate -> yc, rotate -> zc)*cos(phi) - distortion_gradients->uyzcalc(rotate -> xc, rotate -> yc, rotate -> zc)*sin (phi);
     return uxz;
 }
 double DisplacmentGradientSystemReplace::uyxcalc(double x, double y, double z){
+    rotate->Basis(x,y,z);
     double uyx=distortion_gradients->uyxcalc (rotate -> xc, rotate -> yc, rotate -> zc)*pow (cos (phi), 2) + distortion_gradients ->uxxcalc (rotate -> xc, rotate -> yc, rotate -> zc)*cos (phi)*sin (phi) - distortion_gradients ->uyycalc (rotate -> xc, rotate -> yc, rotate -> zc)*cos (phi)*sin (phi) - distortion_gradients ->uxycalc (rotate -> xc, rotate -> yc, rotate -> zc)*pow (sin (phi), 2);
     return uyx;
 }
 double DisplacmentGradientSystemReplace::uyycalc(double x, double y, double z){
+    rotate->Basis(x,y,z);
     double uyy=distortion_gradients ->uyycalc (rotate -> xc, rotate -> yc, rotate -> zc)*pow (cos (phi), 2) + distortion_gradients ->uxycalc (rotate -> xc, rotate -> yc, rotate -> zc)*cos (phi)*sin (phi) + distortion_gradients ->uyxcalc (rotate -> xc, rotate -> yc, rotate -> zc)*cos (phi)*sin (phi) + distortion_gradients ->uxxcalc (rotate -> xc, rotate -> yc, rotate -> zc)*pow (sin (phi), 2);
     return uyy;
 }
 double DisplacmentGradientSystemReplace::uyzcalc(double x, double y, double z){
+    rotate->Basis(x,y,z);
     double uyz=distortion_gradients ->uyzcalc (rotate -> xc, rotate -> yc, rotate -> zc)*cos (phi) +distortion_gradients ->uxzcalc (rotate -> xc, rotate -> yc, rotate -> zc)*sin (phi);
     return uyz;
 }
 double DisplacmentGradientSystemReplace::uzxcalc(double x, double y, double z){
+    rotate->Basis(x,y,z);
     double uzx=distortion_gradients ->uzxcalc (rotate -> xc, rotate -> yc, rotate -> zc)*cos (phi) -distortion_gradients ->uzycalc (rotate -> xc, rotate -> yc, rotate -> zc)*sin (phi);
     return uzx;
 }
 double DisplacmentGradientSystemReplace::uzycalc(double x, double y, double z){
+    rotate->Basis(x,y,z);
     double uzy=distortion_gradients ->uzycalc (rotate -> xc, rotate -> yc, rotate -> zc)*cos (phi) +distortion_gradients ->uzxcalc (rotate -> xc, rotate -> yc, rotate -> zc)*sin (phi);
     return uzy;
 }
 double DisplacmentGradientSystemReplace::uzzcalc(double x, double y, double z){
+    rotate->Basis(x,y,z);
     double uzz=distortion_gradients ->uzzcalc (rotate -> xc, rotate -> yc, rotate -> zc);
     return uzz;
 }
