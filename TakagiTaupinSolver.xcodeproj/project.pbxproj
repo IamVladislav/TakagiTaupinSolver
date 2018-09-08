@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		C80D58AF213A8F2D00A69F2A /* System_Repclacement_Library.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C80D58AD213A8F2D00A69F2A /* System_Repclacement_Library.cpp */; };
+		C82C19D9214468A00041251D /* Initialization_And_Calculation_Geometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C82C19D7214468A00041251D /* Initialization_And_Calculation_Geometry.cpp */; };
 		C83D679421288E0000632623 /* Vector_And_Operations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C83D679221288E0000632623 /* Vector_And_Operations.cpp */; };
 		C8B4EAAF210DA87600D56735 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C8B4EAAE210DA87600D56735 /* main.cpp */; };
 		C8ED9A13213ABA6400382225 /* Distorsion_Source.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C8ED9A11213ABA6400382225 /* Distorsion_Source.cpp */; };
@@ -28,6 +29,8 @@
 /* Begin PBXFileReference section */
 		C80D58AD213A8F2D00A69F2A /* System_Repclacement_Library.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = System_Repclacement_Library.cpp; sourceTree = "<group>"; };
 		C80D58AE213A8F2D00A69F2A /* System_Repclacement_Library.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = System_Repclacement_Library.hpp; sourceTree = "<group>"; };
+		C82C19D7214468A00041251D /* Initialization_And_Calculation_Geometry.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Initialization_And_Calculation_Geometry.cpp; sourceTree = "<group>"; };
+		C82C19D8214468A00041251D /* Initialization_And_Calculation_Geometry.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Initialization_And_Calculation_Geometry.hpp; sourceTree = "<group>"; };
 		C83D679221288E0000632623 /* Vector_And_Operations.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Vector_And_Operations.cpp; sourceTree = "<group>"; };
 		C83D679321288E0000632623 /* Vector_And_Operations.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Vector_And_Operations.hpp; sourceTree = "<group>"; };
 		C8B4EAAB210DA87600D56735 /* TakagiTaupinSolver */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TakagiTaupinSolver; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -73,6 +76,8 @@
 				C83D679321288E0000632623 /* Vector_And_Operations.hpp */,
 				C8ED9A11213ABA6400382225 /* Distorsion_Source.cpp */,
 				C8ED9A12213ABA6400382225 /* Distorsion_Source.hpp */,
+				C82C19D7214468A00041251D /* Initialization_And_Calculation_Geometry.cpp */,
+				C82C19D8214468A00041251D /* Initialization_And_Calculation_Geometry.hpp */,
 			);
 			path = TakagiTaupinSolver;
 			sourceTree = "<group>";
@@ -134,6 +139,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C8ED9A13213ABA6400382225 /* Distorsion_Source.cpp in Sources */,
+				C82C19D9214468A00041251D /* Initialization_And_Calculation_Geometry.cpp in Sources */,
 				C80D58AF213A8F2D00A69F2A /* System_Repclacement_Library.cpp in Sources */,
 				C83D679421288E0000632623 /* Vector_And_Operations.cpp in Sources */,
 				C8B4EAAF210DA87600D56735 /* main.cpp in Sources */,
