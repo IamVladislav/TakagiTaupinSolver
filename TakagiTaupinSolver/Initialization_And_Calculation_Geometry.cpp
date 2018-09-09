@@ -106,6 +106,9 @@ void InitialisationGeometry::Angle_Between_Dislocation_Axis_And_Calculation_Axis
     double kappa_calculate,phi_calculate;
     for(int i=0;i<direction_vector_list.size();i++)
     {
+        if(!is_Right_Normal(direction_vector_list[i], z_vector)){
+            direction_vector_list[i]=Vector_Inverse(direction_vector_list[i]);
+        }
         Vector <double> vector_normal_tayz=Vector_Multiplication<double, double>(direction_vector_list[i], z_vector);
         Vector <double> vector_normal_xz=Vector_Multiplication<double, double>(x_vector, z_vector);
         if(Vector_Absolute_Value(vector_normal_tayz)==0 || Vector_Absolute_Value(vector_normal_tayz)==0){
@@ -113,10 +116,19 @@ void InitialisationGeometry::Angle_Between_Dislocation_Axis_And_Calculation_Axis
         }
         else{
             phi_calculate=acos(Scalar_Multiplication(vector_normal_tayz, vector_normal_xz)/(Vector_Absolute_Value(vector_normal_xz)*Vector_Absolute_Value(vector_normal_tayz)));
+            double angle1, angle2;
+            angle1=acos(Scalar_Multiplication(z_vector, direction_vector_list[i])/(Vector_Absolute_Value(z_vector)*Vector_Absolute_Value(direction_vector_list[i])));
+            angle2=acos(Scalar_Multiplication(y_vector, direction_vector_list[i])/(Vector_Absolute_Value(y_vector)*Vector_Absolute_Value(direction_vector_list[i])));
+            if(((angle1 > 0 && angle1 < PI_2) && (angle2 > PI_2 && angle2 < PI)) || ((angle2 > 0 && angle2 < PI_2) && (angle1 > PI_2 && angle1 < PI))){
+                phi_calculate=2*PI-phi_calculate;
+            }
         }
         kappa_calculate=acos(Scalar_Multiplication(z_vector, direction_vector_list[i])/(Vector_Absolute_Value(z_vector)*Vector_Absolute_Value(direction_vector_list[i])));
-        if(kappa_calculate>PI_2){
+        if(kappa_calculate>PI_2 && kappa_calculate<PI){
             kappa_calculate=kappa_calculate-PI_2;
+        }
+        if(kappa_calculate>=PI){
+            kappa_calculate=kappa_calculate-PI;
         }
         kappa.push_back(kappa_calculate);
         phi.push_back(phi_calculate);
