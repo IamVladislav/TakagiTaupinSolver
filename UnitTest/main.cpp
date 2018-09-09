@@ -1336,6 +1336,16 @@ TEST (Initilalization_And_Calculation_Geometry, Exit_Point_Calculation){
     tay_4.c[1]=1;
     tay_4.c[2]=1;
     tay_vector.push_back(tay_4);
+    Vector<double> tay_5;
+    tay_5.c[0]=1;
+    tay_5.c[1]=1;
+    tay_5.c[2]=-1;
+    tay_vector.push_back(tay_5);
+    Vector<double> tay_6;
+    tay_6.c[0]=1;
+    tay_6.c[1]=1;
+    tay_6.c[2]=-1;
+    tay_vector.push_back(tay_6);
     //Burger's vectorof dislocation:
     Vector<double> burgers_vector;
     burgers_vector.c[0]=1;
@@ -1351,6 +1361,8 @@ TEST (Initilalization_And_Calculation_Geometry, Exit_Point_Calculation){
     segment_lenght.push_back(0);
     segment_lenght.push_back(0);
     segment_lenght.push_back(0);
+    segment_lenght.push_back(0);
+    segment_lenght.push_back(150);
     //Nu
     double nu=0.4;
     InitialisationGeometry *test_obj = new InitialisationGeometry(diffraction_vector, normal_vector, tay_vector, segment_lenght, dislocation_depth, nu, burgers_vector, number_of_dislocation);
@@ -1372,6 +1384,14 @@ TEST (Initilalization_And_Calculation_Geometry, Exit_Point_Calculation){
     ASSERT_NEAR(test_obj->exit_point[3].c[0], -100*cos(test_obj->phi[3])*tan(test_obj->kappa[3]), precision);
     ASSERT_NEAR(test_obj->exit_point[3].c[1], -100*sin(test_obj->phi[3])*tan(test_obj->kappa[3]), precision);
     ASSERT_NEAR(test_obj->exit_point[3].c[2], -100, precision);
+    //Case 5:
+    ASSERT_NEAR(test_obj->exit_point[4].c[0], -100*cos(test_obj->phi[4])*tan(test_obj->kappa[4]), precision);
+    ASSERT_NEAR(test_obj->exit_point[4].c[1], -100*sin(test_obj->phi[4])*tan(test_obj->kappa[4]), precision);
+    ASSERT_NEAR(test_obj->exit_point[4].c[2], -100, precision);
+    //Case 6:
+    ASSERT_NEAR(test_obj->exit_point[5].c[0], -100*cos(test_obj->phi[5])*tan(test_obj->kappa[5])-150*cos(test_obj->phi[5]), precision);
+    ASSERT_NEAR(test_obj->exit_point[5].c[1], -100*sin(test_obj->phi[5])*tan(test_obj->kappa[5])-150*sin(test_obj->phi[5]), precision);
+    ASSERT_NEAR(test_obj->exit_point[5].c[2], -100, precision);
 }
 
 int main(int argc, char * argv[]) {
