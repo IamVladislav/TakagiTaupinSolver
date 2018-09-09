@@ -857,15 +857,15 @@ TEST (Model_Rotation, Angular_Dislocation){
     depth = 150;
     phi = 0.4086378550975923;
     kappa = 1.345282920896765;
-    uxx_expected = -0.00005336;
-    uxy_expected = 0.00064878;
-    uxz_expected = 0.00003711;
-    uyx_expected = -0.00053581;
-    uyy_expected = 0.00005031;
-    uyz_expected = -0.00011076;
-    uzx_expected = -0.00155506;
-    uzy_expected = 0.00424228;
-    uzz_expected = 0.00000749;
+    uxx_expected = -7.94703e-05;
+    uxy_expected = 0.0007291;
+    uxz_expected = -7.54514e-05;
+    uyx_expected = -0.000572782;
+    uyy_expected = 6.42957e-05;
+    uyz_expected = 0.000146607;
+    uzx_expected = 0.00240273;
+    uzy_expected = -0.00505932;
+    uzz_expected = 2.67362e-05;
     test_obj = new DisplacmentGradientSystemReplace(nu, depth, phi, kappa, exit_point_coordinate, segment_lenght, burgers_vector, 1);
     ASSERT_NEAR(test_obj->uxxcalc(x, y, z), uxx_expected, precision);
     ASSERT_NEAR(test_obj->uxycalc(x, y, z), uxy_expected, precision);
@@ -951,40 +951,6 @@ TEST (Model_Rotation, Beam_Dislocation){
     ASSERT_NEAR(test_obj->uzxcalc(x, y, z), uzx_expected, precision);
     ASSERT_NEAR(test_obj->uzycalc(x, y, z), uzy_expected, precision);
     ASSERT_NEAR(test_obj->uzzcalc(x, y, z), uzz_expected, precision);
-    //    //Case 3:
-    //    burgers_vector.c[0]=0;
-    //    burgers_vector.c[1]=0;
-    //    burgers_vector.c[2]=3;
-    //    exit_point_coordinate.c[0]=-600;
-    //    exit_point_coordinate.c[1]=-259.8076211353315;
-    //    exit_point_coordinate.c[2]=-150;
-    //    x=0;
-    //    y=5;
-    //    z=300;
-    //    nu = 0.2;
-    //    segment_lenght = 100;
-    //    depth = 150;
-    //    phi = 0.4086378550975923;
-    //    kappa = 1.345282920896765;
-    //    uxx_expected = -0.00005336;
-    //    uxy_expected = 0.00064878;
-    //    uxz_expected = 0.00003711;
-    //    uyx_expected = -0.00053581;
-    //    uyy_expected = 0.00005031;
-    //    uyz_expected = -0.00011076;
-    //    uzx_expected = -0.00155506;
-    //    uzy_expected = 0.00424228;
-    //    uzz_expected = 0.00000749;
-    //    test_obj = new DisplacmentGradientSystemReplace(nu, depth, phi, kappa, exit_point_coordinate, segment_lenght, burgers_vector, 1);
-    //    ASSERT_NEAR(test_obj->uxxcalc(x, y, z), uxx_expected, precision);
-    //    ASSERT_NEAR(test_obj->uxycalc(x, y, z), uxy_expected, precision);
-    //    ASSERT_NEAR(test_obj->uxzcalc(x, y, z), uxz_expected, precision);
-    //    ASSERT_NEAR(test_obj->uyxcalc(x, y, z), uyx_expected, precision);
-    //    ASSERT_NEAR(test_obj->uyycalc(x, y, z), uyy_expected, precision);
-    //    ASSERT_NEAR(test_obj->uyzcalc(x, y, z), uyz_expected, precision);
-    //    ASSERT_NEAR(test_obj->uzxcalc(x, y, z), uzx_expected, precision);
-    //    ASSERT_NEAR(test_obj->uzycalc(x, y, z), uzy_expected, precision);
-    //    ASSERT_NEAR(test_obj->uzzcalc(x, y, z), uzz_expected, precision);
 }
 
 TEST (Initilalization_And_Calculation_Geometry, Glide_Plane_Calculation){
