@@ -1303,6 +1303,77 @@ TEST (Initilalization_And_Calculation_Geometry, Burgers_Vector_Into_System_Coord
     ASSERT_NEAR(test_obj_1->b_vector.c[2], 0.408248, precision);
 }
 
+TEST (Initilalization_And_Calculation_Geometry, Exit_Point_Calculation){
+    //Diffraction vector:
+    Vector<double> diffraction_vector;
+    diffraction_vector.c[0]=1;
+    diffraction_vector.c[1]=0;
+    diffraction_vector.c[2]=0;
+    //Normal to surface vector:
+    Vector<double> normal_vector;
+    normal_vector.c[0]=0;
+    normal_vector.c[1]=0;
+    normal_vector.c[2]=-1;
+    //Vector of tay-vectors:
+    std::vector <Vector<double>> tay_vector;
+    Vector<double> tay_1;
+    tay_1.c[0]=1;
+    tay_1.c[1]=0;
+    tay_1.c[2]=0;
+    tay_vector.push_back(tay_1);
+    Vector<double> tay_2;
+    tay_2.c[0]=0;
+    tay_2.c[1]=1;
+    tay_2.c[2]=0;
+    tay_vector.push_back(tay_2);
+    Vector<double> tay_3;
+    tay_3.c[0]=0;
+    tay_3.c[1]=0;
+    tay_3.c[2]=1;
+    tay_vector.push_back(tay_3);
+    Vector<double> tay_4;
+    tay_4.c[0]=1;
+    tay_4.c[1]=1;
+    tay_4.c[2]=1;
+    tay_vector.push_back(tay_4);
+    //Burger's vectorof dislocation:
+    Vector<double> burgers_vector;
+    burgers_vector.c[0]=1;
+    burgers_vector.c[1]=1;
+    burgers_vector.c[2]=1;
+    //Number of dislocation in one place:
+    int number_of_dislocation=1;
+    //Dislocation depth:
+    double dislocation_depth=100;
+    //Segment lengt (thi first and second position must be zeros! If the dislocation have more, then to segments, then add into third position a value of mid segment lenght)
+    std::vector<double> segment_lenght;
+    segment_lenght.push_back(0);
+    segment_lenght.push_back(0);
+    segment_lenght.push_back(0);
+    segment_lenght.push_back(0);
+    //Nu
+    double nu=0.4;
+    InitialisationGeometry *test_obj = new InitialisationGeometry(diffraction_vector, normal_vector, tay_vector, segment_lenght, dislocation_depth, nu, burgers_vector, number_of_dislocation);
+    //Someday i replace upper code on object mock, becouse this initialization really don't matter, but i need the object for testing.
+    double precision = 0.0001;
+    //Case 1:
+    ASSERT_NEAR(test_obj->exit_point[0].c[0], INF, precision);
+    ASSERT_NEAR(test_obj->exit_point[0].c[1], INF, precision);
+    ASSERT_NEAR(test_obj->exit_point[0].c[2], -100, precision);
+    //Case 2:
+    ASSERT_NEAR(test_obj->exit_point[1].c[0], INF, precision);
+    ASSERT_NEAR(test_obj->exit_point[1].c[1], INF, precision);
+    ASSERT_NEAR(test_obj->exit_point[1].c[2], -100, precision);
+    //Case 3:
+    ASSERT_NEAR(test_obj->exit_point[2].c[0], 0, precision);
+    ASSERT_NEAR(test_obj->exit_point[2].c[1], 0, precision);
+    ASSERT_NEAR(test_obj->exit_point[2].c[2], -100, precision);
+    //Case 4:
+    ASSERT_NEAR(test_obj->exit_point[3].c[0], -100*cos(test_obj->phi[3])*tan(test_obj->kappa[3]), precision);
+    ASSERT_NEAR(test_obj->exit_point[3].c[1], -100*sin(test_obj->phi[3])*tan(test_obj->kappa[3]), precision);
+    ASSERT_NEAR(test_obj->exit_point[3].c[2], -100, precision);
+}
+
 int main(int argc, char * argv[]) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
