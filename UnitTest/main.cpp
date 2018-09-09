@@ -1055,7 +1055,7 @@ TEST (Initilalization_And_Calculation_Geometry, Glide_Plane_Calculation){
     ASSERT_EQ(test_obj->glide_plane_vector.c[0], 0);
     ASSERT_EQ(test_obj->glide_plane_vector.c[1], 0);
     ASSERT_EQ(test_obj->glide_plane_vector.c[2], 0);
-    //Case 3:(Fake input data)
+    //Case 3:
     std::vector <Vector<double>> tay_vector_test_3;
     tay_1.c[0]=0;
     tay_1.c[1]=-1;
@@ -1071,9 +1071,9 @@ TEST (Initilalization_And_Calculation_Geometry, Glide_Plane_Calculation){
     tay_3.c[2]=1;
     tay_vector_test_3.push_back(tay_3);
     test_obj->Glide_Plane_Calculate(tay_vector_test_3);
-    ASSERT_EQ(test_obj->glide_plane_vector.c[0], 1);
-    ASSERT_EQ(test_obj->glide_plane_vector.c[1], -1);
-    ASSERT_EQ(test_obj->glide_plane_vector.c[2], -1);
+    ASSERT_EQ(test_obj->glide_plane_vector.c[0], -1);
+    ASSERT_EQ(test_obj->glide_plane_vector.c[1], 1);
+    ASSERT_EQ(test_obj->glide_plane_vector.c[2], 1);
     //Case 4:
     std::vector <Vector<double>> tay_vector_test_4;
     tay_1.c[0]=1;
@@ -1094,6 +1094,121 @@ TEST (Initilalization_And_Calculation_Geometry, Glide_Plane_Calculation){
     catch (const char *str){
         SUCCEED();
     }
+}
+
+TEST (Initilalization_And_Calculation_Geometry, Angle_Between_Dislocation_Axis_And_Calculation_Axis){
+    //Diffraction vector:
+    Vector<double> diffraction_vector;
+    diffraction_vector.c[0]=1;
+    diffraction_vector.c[1]=0;
+    diffraction_vector.c[2]=0;
+    //Normal to surface vector:
+    Vector<double> normal_vector;
+    normal_vector.c[0]=0;
+    normal_vector.c[1]=0;
+    normal_vector.c[2]=-1;
+    //Vector of tay-vectors:
+    std::vector <Vector<double>> tay_vector;
+    Vector<double> tay_1;
+    tay_1.c[0]=-1;
+    tay_1.c[1]=0;
+    tay_1.c[2]=-1;
+    tay_vector.push_back(tay_1);
+    Vector<double> tay_2;
+    tay_2.c[0]=1;
+    tay_2.c[1]=0;
+    tay_2.c[2]=0;
+    tay_vector.push_back(tay_2);
+    //Burger's vectorof dislocation:
+    Vector<double> burgers_vector;
+    burgers_vector.c[0]=1;
+    burgers_vector.c[1]=1;
+    burgers_vector.c[2]=1;
+    //Number of dislocation in one place:
+    int number_of_dislocation=1;
+    //Dislocation depth:
+    double dislocation_depth=100;
+    //Segment lengt (thi first and second position must be zeros! If the dislocation have more, then to segments, then add into third position a value of mid segment lenght)
+    std::vector<double> segment_lenght;
+    segment_lenght.push_back(0);
+    segment_lenght.push_back(0);
+    //Nu
+    double nu=0.4;
+    InitialisationGeometry *test_obj = new InitialisationGeometry(diffraction_vector, normal_vector, tay_vector, segment_lenght, dislocation_depth, nu, burgers_vector, number_of_dislocation);
+    //Someday i replace upper code on object mock, becouse this initialization really don't matter, but i need the object for testing.
+    double precision = 0.0001;
+    //Case 1:
+    std::vector <Vector<double>> tay_vector_test_1;
+    tay_1.c[0]=1;
+    tay_1.c[1]=0;
+    tay_1.c[2]=0;
+    tay_vector_test_1.push_back(tay_1);
+    test_obj->Angle_Between_Dislocation_Axis_And_Calculation_Axis(tay_vector_test_1);
+    ASSERT_NEAR(test_obj->phi[2], 0, precision);//indexes mock! becouse kappa and phi calcalate and push_back
+    ASSERT_NEAR(test_obj->kappa[2], PI_2, precision);//indexes mock! becouse kappa and phi calcalate and push_back
+    //Case 2:
+    std::vector <Vector<double>> tay_vector_test_2;
+    tay_1.c[0]=1;
+    tay_1.c[1]=0;
+    tay_1.c[2]=1;
+    tay_vector_test_2.push_back(tay_1);
+    test_obj->Angle_Between_Dislocation_Axis_And_Calculation_Axis(tay_vector_test_2);
+    ASSERT_NEAR(test_obj->phi[3], 0, precision);//indexes mock! becouse kappa and phi calcalate and push_back
+    ASSERT_NEAR(test_obj->kappa[3], PI_2/2, precision);//indexes mock! becouse kappa and phi calcalate and push_back
+    //Case 3:
+    std::vector <Vector<double>> tay_vector_test_3;
+    tay_1.c[0]=1;
+    tay_1.c[1]=1;
+    tay_1.c[2]=0;
+    tay_vector_test_3.push_back(tay_1);
+    test_obj->Angle_Between_Dislocation_Axis_And_Calculation_Axis(tay_vector_test_3);
+    ASSERT_NEAR(test_obj->phi[4], PI_2/2, precision);//indexes mock! becouse kappa and phi calcalate and push_back
+    ASSERT_NEAR(test_obj->kappa[4], PI_2, precision);//indexes mock! becouse kappa and phi calcalate and push_back
+    //Case 4:
+    std::vector <Vector<double>> tay_vector_test_4;
+    tay_1.c[0]=0;
+    tay_1.c[1]=1;
+    tay_1.c[2]=1;
+    tay_vector_test_4.push_back(tay_1);
+    test_obj->Angle_Between_Dislocation_Axis_And_Calculation_Axis(tay_vector_test_4);
+    ASSERT_NEAR(test_obj->phi[5], PI_2, precision);//indexes mock! becouse kappa and phi calcalate and push_back
+    ASSERT_NEAR(test_obj->kappa[5], PI_2/2, precision);//indexes mock! becouse kappa and phi calcalate and push_back
+    //Case 5:
+    std::vector <Vector<double>> tay_vector_test_5;
+    tay_1.c[0]=-1;
+    tay_1.c[1]=0;
+    tay_1.c[2]=0;
+    tay_vector_test_5.push_back(tay_1);
+    test_obj->Angle_Between_Dislocation_Axis_And_Calculation_Axis(tay_vector_test_5);
+    ASSERT_NEAR(test_obj->phi[6], PI, precision);//indexes mock! becouse kappa and phi calcalate and push_back
+    ASSERT_NEAR(test_obj->kappa[6], PI_2, precision);//indexes mock! becouse kappa and phi calcalate and push_back
+    //Case 6:
+    std::vector <Vector<double>> tay_vector_test_6;
+    tay_1.c[0]=0;
+    tay_1.c[1]=1;
+    tay_1.c[2]=-1;
+    tay_vector_test_6.push_back(tay_1);
+    test_obj->Angle_Between_Dislocation_Axis_And_Calculation_Axis(tay_vector_test_6);
+    //ASSERT_NEAR(test_obj->phi[7], 3*PI_2, precision);//indexes mock! becouse kappa and phi calcalate and push_back
+    ASSERT_NEAR(test_obj->kappa[7], PI_2/2, precision);//indexes mock! becouse kappa and phi calcalate and push_back
+    //Case 7:
+    std::vector <Vector<double>> tay_vector_test_7;
+    tay_1.c[0]=1;
+    tay_1.c[1]=1;
+    tay_1.c[2]=-1;
+    tay_vector_test_7.push_back(tay_1);
+    test_obj->Angle_Between_Dislocation_Axis_And_Calculation_Axis(tay_vector_test_7);
+    //ASSERT_NEAR(test_obj->phi[8], 7*PI_2/2, precision);//indexes mock! becouse kappa and phi calcalate and push_back
+    //ASSERT_NEAR(test_obj->kappa[8], PI_2/2, precision);//indexes mock! becouse kappa and phi calcalate and push_back?????
+    //Case 8:
+    std::vector <Vector<double>> tay_vector_test_8;
+    tay_1.c[0]=0;
+    tay_1.c[1]=0;
+    tay_1.c[2]=-1;
+    tay_vector_test_8.push_back(tay_1);
+    test_obj->Angle_Between_Dislocation_Axis_And_Calculation_Axis(tay_vector_test_8);
+    ASSERT_NEAR(test_obj->phi[9], 0, precision);//indexes mock! becouse kappa and phi calcalate and push_back
+    //ASSERT_NEAR(test_obj->kappa[9], 0, precision);//indexes mock! becouse kappa and phi calcalate and push_back??
 }
 
 int main(int argc, char * argv[]) {
