@@ -59,6 +59,9 @@ void InitialisationGeometry::Glide_Plane(std::vector <Vector<double>> direction_
             break;
         default:
             Glide_Plane_Calculate(direction_vector_list);
+            if(!is_Right_Normal(glide_plane_vector, Vector_Inverse(z_vector))){
+                glide_plane_vector=Vector_Inverse(glide_plane_vector);
+            }
             break;
     }
 }
@@ -66,7 +69,7 @@ void InitialisationGeometry::Glide_Plane_Calculate(std::vector <Vector<double>> 
     Vector<double> comparison_vector;
     for(int i=1;i<direction_vector_list.size();i++){
         glide_plane_vector=Vector_Multiplication<double, double>(direction_vector_list[i-1], direction_vector_list[i]);
-        if (i!=1 and comparison_vector!=glide_plane_vector){
+        if (i!=1 and (comparison_vector!=glide_plane_vector or Vector_Inverse(comparison_vector)!=glide_plane_vector)){
             throw "This vectors haven't overall glide plane";
         }
         comparison_vector=glide_plane_vector;
@@ -117,5 +120,14 @@ void InitialisationGeometry::Angle_Between_Dislocation_Axis_And_Calculation_Axis
         }
         kappa.push_back(kappa_calculate);
         phi.push_back(phi_calculate);
+    }
+}
+template <typename type> bool InitialisationGeometry::is_Right_Normal(Vector<type> first_vector, Vector<type> second_vector){
+    double angle = acos(Scalar_Multiplication(first_vector, second_vector)/(Vector_Absolute_Value(first_vector)*Vector_Absolute_Value(second_vector)));
+    if (angle >= 0 && angle <= PI_2){
+        return true;
+    }
+    else{
+        return false;
     }
 }

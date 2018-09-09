@@ -31,6 +31,7 @@ public:
     void Exit_Point_Coordinate(std::vector <Vector<double>> direction_vector_list, std::vector <double> segment_lenght);
     void Burgers_Vector_Into_System_Coordinates(Vector<double> b_initial);
     void Angle_Between_Dislocation_Axis_And_Calculation_Axis(std::vector <Vector<double>> direction_vector_list);
+    template <typename type> bool is_Right_Normal(Vector<type> first_vector, Vector<type> second_vector);
 };
 
 #endif /* Initialization_And_Calculation_Geometry_hpp */
