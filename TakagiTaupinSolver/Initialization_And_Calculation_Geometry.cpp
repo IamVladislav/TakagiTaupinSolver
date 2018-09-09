@@ -90,8 +90,8 @@ void InitialisationGeometry::Exit_Point_Coordinate(std::vector <Vector<double>> 
                 exit_point_calculation.c[1]=INF;
             }
             else{
-                exit_point_calculation.c[0]=(dislocation_depth/tan(kappa[i])+segment_lenght[i])*cos(phi[i]);
-                exit_point_calculation.c[1]=(dislocation_depth/tan(kappa[i])+segment_lenght[i])*sin(phi[i]);
+                exit_point_calculation.c[0]=(-dislocation_depth*tan(kappa[i])+segment_lenght[i])*cos(phi[i]);
+                exit_point_calculation.c[1]=(-dislocation_depth*tan(kappa[i])+segment_lenght[i])*sin(phi[i]);
             }
         }
         exit_point.push_back(exit_point_calculation);
