@@ -1238,6 +1238,71 @@ TEST (Initilalization_And_Calculation_Geometry, Angle_Between_Dislocation_Axis_A
     ASSERT_NEAR(test_obj->kappa[12], 1.264519, precision);//indexes mock! becouse kappa and phi calcalate and push_back?????
 }
 
+TEST (Initilalization_And_Calculation_Geometry, Burgers_Vector_Into_System_Coordinates){
+    //Diffraction vector:
+    Vector<double> diffraction_vector;
+    diffraction_vector.c[0]=1;
+    diffraction_vector.c[1]=1;
+    diffraction_vector.c[2]=1;
+    //Normal to surface vector:
+    Vector<double> normal_vector;
+    normal_vector.c[0]=-1;
+    normal_vector.c[1]=-1;
+    normal_vector.c[2]=1;
+    //Vector of tay-vectors:
+    std::vector <Vector<double>> tay_vector;
+    Vector<double> tay_1;
+    tay_1.c[0]=-1;
+    tay_1.c[1]=0;
+    tay_1.c[2]=-1;
+    tay_vector.push_back(tay_1);
+    Vector<double> tay_2;
+    tay_2.c[0]=1;
+    tay_2.c[1]=0;
+    tay_2.c[2]=0;
+    tay_vector.push_back(tay_2);
+    //Burger's vectorof dislocation:
+    Vector<double> burgers_vector;
+    burgers_vector.c[0]=1;
+    burgers_vector.c[1]=1;
+    burgers_vector.c[2]=1;
+    //Number of dislocation in one place:
+    int number_of_dislocation=1;
+    //Dislocation depth:
+    double dislocation_depth=100;
+    //Segment lengt (thi first and second position must be zeros! If the dislocation have more, then to segments, then add into third position a value of mid segment lenght)
+    std::vector<double> segment_lenght;
+    segment_lenght.push_back(0);
+    segment_lenght.push_back(0);
+    //Nu
+    double nu=0.4;
+    InitialisationGeometry *test_obj = new InitialisationGeometry(diffraction_vector, normal_vector, tay_vector, segment_lenght, dislocation_depth, nu, burgers_vector, number_of_dislocation);
+    //Someday i replace upper code on object mock, becouse this initialization really don't matter, but i need the object for testing.
+    double precision = 0.0001;
+    //Case 1:
+    ASSERT_NEAR(test_obj->b_vector.c[0], 1.732050, precision);
+    ASSERT_NEAR(test_obj->b_vector.c[1], 0, precision);
+    ASSERT_NEAR(test_obj->b_vector.c[2], 0, precision);
+    //Case 2:
+    //Diffraction vector:
+    diffraction_vector.c[0]=-1;
+    diffraction_vector.c[1]=1;
+    diffraction_vector.c[2]=-1;
+    //Normal to surface vector:
+    normal_vector.c[0]=-2;
+    normal_vector.c[1]=-1;
+    normal_vector.c[2]=1;
+    //Burger's vectorof dislocation:
+    burgers_vector.c[0]=1;
+    burgers_vector.c[1]=0;
+    burgers_vector.c[2]=1;
+    InitialisationGeometry *test_obj_1 = new InitialisationGeometry(diffraction_vector, normal_vector, tay_vector, segment_lenght, dislocation_depth, nu, burgers_vector, number_of_dislocation);
+    //Someday i replace upper code on object mock, becouse this initialization really don't matter, but i need the object for testing.
+    ASSERT_NEAR(test_obj_1->b_vector.c[0], -1.1547, precision);
+    ASSERT_NEAR(test_obj_1->b_vector.c[1], 0.70710678, precision);
+    ASSERT_NEAR(test_obj_1->b_vector.c[2], 0.408248, precision);
+}
+
 int main(int argc, char * argv[]) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
