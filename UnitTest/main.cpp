@@ -1057,23 +1057,23 @@ TEST (Initilalization_And_Calculation_Geometry, Glide_Plane_Calculation){
     ASSERT_EQ(test_obj->glide_plane_vector.c[2], 0);
     //Case 3:(Fake input data)
     std::vector <Vector<double>> tay_vector_test_3;
-    tay_1.c[0]=1;
-    tay_1.c[1]=0;
-    tay_1.c[2]=0;
+    tay_1.c[0]=0;
+    tay_1.c[1]=-1;
+    tay_1.c[2]=1;
     tay_vector_test_3.push_back(tay_1);
-    tay_2.c[0]=1;
-    tay_2.c[1]=1;
-    tay_2.c[2]=1;
+    tay_2.c[0]=-1;
+    tay_2.c[1]=-1;
+    tay_2.c[2]=0;
     tay_vector_test_3.push_back(tay_2);
     Vector<double> tay_3;
-    tay_3.c[0]=10;
-    tay_3.c[1]=1;
+    tay_3.c[0]=1;
+    tay_3.c[1]=0;
     tay_3.c[2]=1;
     tay_vector_test_3.push_back(tay_3);
     test_obj->Glide_Plane_Calculate(tay_vector_test_3);
-    ASSERT_EQ(test_obj->glide_plane_vector.c[0], 0);
+    ASSERT_EQ(test_obj->glide_plane_vector.c[0], 1);
     ASSERT_EQ(test_obj->glide_plane_vector.c[1], -1);
-    ASSERT_EQ(test_obj->glide_plane_vector.c[2], 1);
+    ASSERT_EQ(test_obj->glide_plane_vector.c[2], -1);
     //Case 4:
     std::vector <Vector<double>> tay_vector_test_4;
     tay_1.c[0]=1;
