@@ -69,7 +69,7 @@ void InitialisationGeometry::Glide_Plane_Calculate(std::vector <Vector<double>> 
     Vector<double> comparison_vector;
     for(int i=1;i<direction_vector_list.size();i++){
         glide_plane_vector=Vector_Multiplication<double, double>(direction_vector_list[i-1], direction_vector_list[i]);
-        if (i!=1 and (comparison_vector!=glide_plane_vector or Vector_Inverse(comparison_vector)!=glide_plane_vector)){
+        if (i!=1 and (comparison_vector!=glide_plane_vector and Vector_Inverse(comparison_vector)!=glide_plane_vector)){
             throw "This vectors haven't overall glide plane";
         }
         comparison_vector=glide_plane_vector;
