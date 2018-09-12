@@ -984,14 +984,20 @@ TEST (Initilalization_And_Calculation_Geometry, Glide_Plane_Calculation){
     //Number of dislocation in one place:
     int number_of_dislocation=1;
     //Dislocation depth:
-    double dislocation_depth=100;
+    std::vector<double> dislocation_depth;
+    dislocation_depth.push_back(100);
+    dislocation_depth.push_back(100);
     //Segment lengt (thi first and second position must be zeros! If the dislocation have more, then to segments, then add into third position a value of mid segment lenght)
     std::vector<double> segment_lenght;
     segment_lenght.push_back(0);
     segment_lenght.push_back(0);
     //Nu
     double nu=0.4;
-    InitialisationGeometry *test_obj = new InitialisationGeometry(diffraction_vector, normal_vector, tay_vector, segment_lenght, dislocation_depth, nu, burgers_vector, number_of_dislocation);
+    //Type list
+    std::vector<int> type_list;
+    type_list.push_back(1);
+    type_list.push_back(1);
+    InitialisationGeometry *test_obj = new InitialisationGeometry(diffraction_vector, normal_vector, tay_vector, segment_lenght, type_list, dislocation_depth, nu, burgers_vector, number_of_dislocation);
     //Someday i replace upper code on object mock, becouse this initialization really don't matter, but i need the object for testing.
     //Case 1:
     std::vector <Vector<double>> tay_vector_test_1;
@@ -1093,14 +1099,20 @@ TEST (Initilalization_And_Calculation_Geometry, Angle_Between_Dislocation_Axis_A
     //Number of dislocation in one place:
     int number_of_dislocation=1;
     //Dislocation depth:
-    double dislocation_depth=100;
+    std::vector<double> dislocation_depth;
+    dislocation_depth.push_back(100);
+    dislocation_depth.push_back(100);
     //Segment lengt (thi first and second position must be zeros! If the dislocation have more, then to segments, then add into third position a value of mid segment lenght)
     std::vector<double> segment_lenght;
     segment_lenght.push_back(0);
     segment_lenght.push_back(0);
     //Nu
     double nu=0.4;
-    InitialisationGeometry *test_obj = new InitialisationGeometry(diffraction_vector, normal_vector, tay_vector, segment_lenght, dislocation_depth, nu, burgers_vector, number_of_dislocation);
+    //type list
+    std::vector<int> type_list;
+    type_list.push_back(1);
+    type_list.push_back(1);
+    InitialisationGeometry *test_obj = new InitialisationGeometry(diffraction_vector, normal_vector, tay_vector, segment_lenght, type_list, dislocation_depth, nu, burgers_vector, number_of_dislocation);
     //Someday i replace upper code on object mock, becouse this initialization really don't matter, but i need the object for testing.
     double precision = 0.0001;
     //Case 1:
@@ -1235,14 +1247,20 @@ TEST (Initilalization_And_Calculation_Geometry, Burgers_Vector_Into_System_Coord
     //Number of dislocation in one place:
     int number_of_dislocation=1;
     //Dislocation depth:
-    double dislocation_depth=100;
+    std::vector<double> dislocation_depth;
+    dislocation_depth.push_back(100);
+    dislocation_depth.push_back(100);
     //Segment lengt (thi first and second position must be zeros! If the dislocation have more, then to segments, then add into third position a value of mid segment lenght)
     std::vector<double> segment_lenght;
     segment_lenght.push_back(0);
     segment_lenght.push_back(0);
     //Nu
     double nu=0.4;
-    InitialisationGeometry *test_obj = new InitialisationGeometry(diffraction_vector, normal_vector, tay_vector, segment_lenght, dislocation_depth, nu, burgers_vector, number_of_dislocation);
+    //type list
+    std::vector<int> type_list;
+    type_list.push_back(1);
+    type_list.push_back(1);
+    InitialisationGeometry *test_obj = new InitialisationGeometry(diffraction_vector, normal_vector, tay_vector, segment_lenght, type_list, dislocation_depth, nu, burgers_vector, number_of_dislocation);
     //Someday i replace upper code on object mock, becouse this initialization really don't matter, but i need the object for testing.
     double precision = 0.0001;
     //Case 1:
@@ -1262,7 +1280,7 @@ TEST (Initilalization_And_Calculation_Geometry, Burgers_Vector_Into_System_Coord
     burgers_vector.c[0]=1;
     burgers_vector.c[1]=0;
     burgers_vector.c[2]=1;
-    InitialisationGeometry *test_obj_1 = new InitialisationGeometry(diffraction_vector, normal_vector, tay_vector, segment_lenght, dislocation_depth, nu, burgers_vector, number_of_dislocation);
+    InitialisationGeometry *test_obj_1 = new InitialisationGeometry(diffraction_vector, normal_vector, tay_vector, segment_lenght, type_list, dislocation_depth, nu, burgers_vector, number_of_dislocation);
     //Someday i replace upper code on object mock, becouse this initialization really don't matter, but i need the object for testing.
     ASSERT_NEAR(test_obj_1->b_vector.c[0], -1.1547, precision);
     ASSERT_NEAR(test_obj_1->b_vector.c[1], 0.70710678, precision);
@@ -1320,7 +1338,13 @@ TEST (Initilalization_And_Calculation_Geometry, Exit_Point_Calculation){
     //Number of dislocation in one place:
     int number_of_dislocation=1;
     //Dislocation depth:
-    double dislocation_depth=100;
+    std::vector<double> dislocation_depth;
+    dislocation_depth.push_back(100);
+    dislocation_depth.push_back(100);
+    dislocation_depth.push_back(100);
+    dislocation_depth.push_back(100);
+    dislocation_depth.push_back(100);
+    dislocation_depth.push_back(100);
     //Segment lengt (thi first and second position must be zeros! If the dislocation have more, then to segments, then add into third position a value of mid segment lenght)
     std::vector<double> segment_lenght;
     segment_lenght.push_back(0);
@@ -1331,7 +1355,15 @@ TEST (Initilalization_And_Calculation_Geometry, Exit_Point_Calculation){
     segment_lenght.push_back(150);
     //Nu
     double nu=0.4;
-    InitialisationGeometry *test_obj = new InitialisationGeometry(diffraction_vector, normal_vector, tay_vector, segment_lenght, dislocation_depth, nu, burgers_vector, number_of_dislocation);
+    //type list
+    std::vector<int> type_list;
+    type_list.push_back(1);
+    type_list.push_back(1);
+    type_list.push_back(1);
+    type_list.push_back(1);
+    type_list.push_back(1);
+    type_list.push_back(1);
+    InitialisationGeometry *test_obj = new InitialisationGeometry(diffraction_vector, normal_vector, tay_vector, segment_lenght, type_list, dislocation_depth, nu, burgers_vector, number_of_dislocation);
     //Someday i replace upper code on object mock, becouse this initialization really don't matter, but i need the object for testing.
     double precision = 0.0001;
     //Case 1:
