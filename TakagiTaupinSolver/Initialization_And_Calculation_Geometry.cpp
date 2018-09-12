@@ -8,7 +8,7 @@
 
 #include "Initialization_And_Calculation_Geometry.hpp"
 
-InitialisationGeometry::InitialisationGeometry(Vector<double> diffraction_vector,Vector<double> normal_vector,std::vector <Vector<double>> direction_vector_list,std::vector <double> segment_lenght,  double dislocation_depth, double nu, Vector<double> burgers_vector, int nubmer_of_dislocation){
+InitialisationGeometry::InitialisationGeometry(Vector<double> diffraction_vector,Vector<double> normal_vector,std::vector <Vector<double>> direction_vector_list,std::vector <double> segment_lenght, std::vector <int> type_list, std::vector <double> dislocation_depth, double nu, Vector<double> burgers_vector, int nubmer_of_dislocation){
     this->nu=nu;
     this->dislocation_depth=dislocation_depth;
     x_vector=Vector_Normalization<double, double>(diffraction_vector);
@@ -27,22 +27,12 @@ InitialisationGeometry::InitialisationGeometry(Vector<double> diffraction_vector
     this->dislocation_depth=dislocation_depth;
     Angle_Between_Dislocation_Axis_And_Calculation_Axis(direction_vector_list);
     Exit_Point_Coordinate(direction_vector_list, segment_lenght);
-    Model_Creation(direction_vector_list, segment_lenght);
+    Model_Creation(direction_vector_list, segment_lenght, type_list);
 }
-void InitialisationGeometry::Model_Creation(std::vector <Vector<double>> direction_vector_list, std::vector <double> segment_lenght){//mock
+void InitialisationGeometry::Model_Creation(std::vector <Vector<double>> direction_vector_list, std::vector <double> segment_lenght, std::vector <int> type_list){
     for(int i=0;i<direction_vector_list.size();i++){
-        if(exit_point[i].c[0]>=(INF-0.01*INF) && exit_point[i].c[0]<=(INF+0.01*INF)){
-            DisplacmentGradientSystemReplace angular_dislocation(this->nu, this->dislocation_depth, this->phi[i], this->kappa[i], this->exit_point[i], segment_lenght[i],this->b_vector, 1);
-            final_model.push_back(angular_dislocation);
-            std::cout<<"Parallel segment created!"<<std::endl;
-        }
-        else{
-            DisplacmentGradientSystemReplace angular_dislocation(this->nu, this->dislocation_depth, this->phi[i], this->kappa[i], this->exit_point[i], segment_lenght[i], this->b_vector, 1);
-            final_model.push_back(angular_dislocation);
-            DisplacmentGradientSystemReplace beam_dislocation(this->nu, this->dislocation_depth, this->phi[i], this->kappa[i], this->exit_point[i], segment_lenght[i], this->b_vector, 2);
-            final_model.push_back(beam_dislocation);
-            std::cout<<"Exit segment created!"<<std::endl;
-        }
+        DisplacmentGradientSystemReplace object(this->nu, this->dislocation_depth[i], this->phi[i], this->kappa[i], this->exit_point[i], segment_lenght[i], this->b_vector, type_list[i]);
+        final_model.push_back(object);
     }
 }
 Model_Of_Polygonal_Dislocation* InitialisationGeometry::ModelOutput(){//mock?
@@ -67,9 +57,13 @@ void InitialisationGeometry::Glide_Plane(std::vector <Vector<double>> direction_
 }
 void InitialisationGeometry::Glide_Plane_Calculate(std::vector <Vector<double>> direction_vector_list){
     Vector<double> comparison_vector;
+    Vector<double> zero_vector;
+    zero_vector.c[0]=0;
+    zero_vector.c[1]=0;
+    zero_vector.c[2]=0;
     for(int i=1;i<direction_vector_list.size();i++){
         glide_plane_vector=Vector_Multiplication<double, double>(direction_vector_list[i-1], direction_vector_list[i]);
-        if (i!=1 and (comparison_vector!=glide_plane_vector and Vector_Inverse(comparison_vector)!=glide_plane_vector)){
+        if (i!=1 and (comparison_vector!=glide_plane_vector && Vector_Inverse(comparison_vector)!=glide_plane_vector) && glide_plane_vector==zero_vector){
             throw "This vectors haven't overall glide plane";
         }
         comparison_vector=glide_plane_vector;
@@ -79,7 +73,7 @@ void InitialisationGeometry::Exit_Point_Coordinate(std::vector <Vector<double>> 
     Vector<double> exit_point_calculation;
     for(int i=0;i<direction_vector_list.size();i++)
     {
-        exit_point_calculation.c[2]=-dislocation_depth;
+        exit_point_calculation.c[2]=-dislocation_depth[i];
         if(kappa[i]>=(-0.01*PI_2) && kappa[i]<=(+0.01*PI_2)){
             exit_point_calculation.c[0]=(segment_lenght[i])*cos(phi[i]);
             exit_point_calculation.c[1]=(segment_lenght[i])*sin(phi[i]);
@@ -90,8 +84,8 @@ void InitialisationGeometry::Exit_Point_Coordinate(std::vector <Vector<double>> 
                 exit_point_calculation.c[1]=INF;
             }
             else{
-                exit_point_calculation.c[0]=-(dislocation_depth*tan(kappa[i])+segment_lenght[i])*cos(phi[i]);
-                exit_point_calculation.c[1]=-(dislocation_depth*tan(kappa[i])+segment_lenght[i])*sin(phi[i]);
+                exit_point_calculation.c[0]=-(dislocation_depth[i]*tan(kappa[i])+segment_lenght[i])*cos(phi[i]);
+                exit_point_calculation.c[1]=-(dislocation_depth[i]*tan(kappa[i])+segment_lenght[i])*sin(phi[i]);
             }
         }
         exit_point.push_back(exit_point_calculation);
