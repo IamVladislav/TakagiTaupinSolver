@@ -19,12 +19,12 @@
 class InitialisationGeometry{
 public:
     Vector<double> x_vector,y_vector,z_vector, glide_plane_vector, b_vector;
-    std::vector <double> kappa, phi;
+    std::vector <double> kappa, phi, dislocation_depth;
     std::vector <Vector<double>> exit_point;
     std::vector <DisplacmentGradientSystemReplace> final_model;
-    double dislocation_depth, nu;
-    InitialisationGeometry(Vector<double> diffraction_vector,Vector<double> normal_vector,std::vector <Vector<double>> direction_vector_list,std::vector <double> segment_lenght,  double dislocation_depth, double nu, Vector<double> burgers_vector, int nubmer_of_dislocation);
-    void Model_Creation(std::vector <Vector<double>> direction_vector_list, std::vector <double> segment_lenght);
+    double nu;
+    InitialisationGeometry(Vector<double> diffraction_vector,Vector<double> normal_vector,std::vector <Vector<double>> direction_vector_list,std::vector <double> segment_lenght, std::vector <int> type_list, std::vector <double> dislocation_depth, double nu, Vector<double> burgers_vector, int nubmer_of_dislocation);
+    void Model_Creation(std::vector <Vector<double>> direction_vector_list, std::vector <double> segment_lenghtm, std::vector <int> type_list);
     Model_Of_Polygonal_Dislocation* ModelOutput();
     void Glide_Plane(std::vector <Vector<double>> direction_vector_list);
     void Glide_Plane_Calculate(std::vector <Vector<double>> direction_vector_list);

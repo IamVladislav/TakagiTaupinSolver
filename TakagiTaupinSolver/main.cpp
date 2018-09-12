@@ -34,10 +34,15 @@ int main(int argc, const char * argv[]) {
     tay_1.c[2]=-1;
     tay_vector.push_back(tay_1);
     Vector<double> tay_2;
-    tay_2.c[0]=1;
+    tay_2.c[0]=-1;
     tay_2.c[1]=0;
-    tay_2.c[2]=0;
+    tay_2.c[2]=-1;
     tay_vector.push_back(tay_2);
+    Vector<double> tay_3;
+    tay_3.c[0]=1;
+    tay_3.c[1]=0;
+    tay_3.c[2]=0;
+    tay_vector.push_back(tay_3);
     //Burger's vectorof dislocation:
     Vector<double> burgers_vector;
     burgers_vector.c[0]=1;
@@ -46,9 +51,13 @@ int main(int argc, const char * argv[]) {
     //Number of dislocation in one place:
     int number_of_dislocation=1;
     //Dislocation depth:
-    double dislocation_depth=100;
+    std::vector <double> dislocation_depth;
+    dislocation_depth.push_back(100);
+    dislocation_depth.push_back(100);
+    dislocation_depth.push_back(100);
     //Segment lengt (thi first and second position must be zeros! If the dislocation have more, then to segments, then add into third position a value of mid segment lenght)
     std::vector<double> segment_lenght;
+    segment_lenght.push_back(0);
     segment_lenght.push_back(0);
     segment_lenght.push_back(0);
     //Nu
@@ -89,7 +98,11 @@ int main(int argc, const char * argv[]) {
 //    exit_point_coordinates.c[1]=-1;
 //    exit_point_coordinates.c[2]=-1;
 //    DisplacmentGradientSystemReplace *test2 = new DisplacmentGradientSystemReplace(0.4, dislocation_depth, 1.0, 1.0, exit_point_coordinates,burgers_vector, 2);
-    InitialisationGeometry *init_obj = new InitialisationGeometry(diffraction_vector, normal_vector, tay_vector, segment_lenght, dislocation_depth, nu, burgers_vector, number_of_dislocation);
+    std::vector<int> type_list;
+    type_list.push_back(2);
+    type_list.push_back(1);
+    type_list.push_back(1);
+    InitialisationGeometry *init_obj = new InitialisationGeometry(diffraction_vector, normal_vector, tay_vector, segment_lenght, type_list, dislocation_depth, nu, burgers_vector, number_of_dislocation);
     //Test
     Model_Of_Polygonal_Dislocation *test;
     test=init_obj->ModelOutput();
