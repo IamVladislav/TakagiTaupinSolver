@@ -1360,6 +1360,94 @@ TEST (Initilalization_And_Calculation_Geometry, Exit_Point_Calculation){
     ASSERT_NEAR(test_obj->exit_point[5].c[2], -100, precision);
 }
 
+TEST (Model_Construction, Half_Angle_Dislocation){
+    Vector<double> burgers_vector, exit_point_coordinate;
+    double x, y, z, depth, nu, segment_lenght, uxx_expected, uxy_expected, uxz_expected, uyx_expected,uyy_expected,uyz_expected,uzx_expected,uzy_expected,uzz_expected,phi,kappa;
+    Model_Of_Polygonal_Dislocation *half_angle;
+    std::vector<DisplacmentGradientSystemReplace> object_vector, object_vector_case2;
+    double precision = 0.000001;
+    //Case 1:
+    burgers_vector.c[0]=3;
+    burgers_vector.c[1]=3;
+    burgers_vector.c[2]=3;
+    exit_point_coordinate.c[0]=-50;
+    exit_point_coordinate.c[1]=-100;
+    exit_point_coordinate.c[2]=-100;
+    x=5;
+    y=6;
+    z=8;
+    nu = 0.4;
+    segment_lenght = 0;
+    depth = 100;
+    phi = 1.10714871779409;
+    kappa = 0.8410686705679302;
+    DisplacmentGradientSystemReplace angular90(nu, depth, 0, PI_2, exit_point_coordinate, segment_lenght, burgers_vector, 1);//mock
+    DisplacmentGradientSystemReplace angular(nu, depth, phi, kappa, exit_point_coordinate, segment_lenght, Vector_Inverse(burgers_vector), 1);//mock
+    DisplacmentGradientSystemReplace beam(nu, depth, phi, kappa, exit_point_coordinate, segment_lenght, burgers_vector, 2);//mock
+    object_vector.push_back(angular90);
+    object_vector.push_back(angular);
+    object_vector.push_back(beam);
+    half_angle = new Model_Of_Polygonal_Dislocation(object_vector);
+    uxx_expected = 0.00138467;
+    uxy_expected = -0.00449166;
+    uxz_expected = 0.00316796;
+    uyx_expected = -0.00113422;
+    uyy_expected = -0.0354376;
+    uyz_expected = 0.0295726;
+    uzx_expected = 0.00690583;
+    uzy_expected = -0.0501124;
+    uzz_expected = 0.0317752;
+    ASSERT_NEAR(half_angle->uxxcalc(x, y, z), uxx_expected, precision);
+    ASSERT_NEAR(half_angle->uxycalc(x, y, z), uxy_expected, precision);
+    ASSERT_NEAR(half_angle->uxzcalc(x, y, z), uxz_expected, precision);
+    ASSERT_NEAR(half_angle->uyxcalc(x, y, z), uyx_expected, precision);
+    ASSERT_NEAR(half_angle->uyycalc(x, y, z), uyy_expected, precision);
+    ASSERT_NEAR(half_angle->uyzcalc(x, y, z), uyz_expected, precision);
+    ASSERT_NEAR(half_angle->uzxcalc(x, y, z), uzx_expected, precision);
+    ASSERT_NEAR(half_angle->uzycalc(x, y, z), uzy_expected, precision);
+    ASSERT_NEAR(half_angle->uzzcalc(x, y, z), uzz_expected, precision);
+    //Case 2:
+    burgers_vector.c[0]=3;
+    burgers_vector.c[1]=-1;
+    burgers_vector.c[2]=3;
+    exit_point_coordinate.c[0]=-150;
+    exit_point_coordinate.c[1]=-173.205;
+    exit_point_coordinate.c[2]=-300;
+    x=124;
+    y=-23;
+    z=400;
+    nu = 0.3;
+    segment_lenght = 0;
+    depth = 300;
+    phi = 0.8570719478501309;
+    kappa = 0.652251026319475;
+    DisplacmentGradientSystemReplace angular90_case2(nu, depth, 0, PI_2, exit_point_coordinate, segment_lenght, burgers_vector, 1);//mock
+    DisplacmentGradientSystemReplace angular_case2(nu, depth, phi, kappa, exit_point_coordinate, segment_lenght, Vector_Inverse(burgers_vector), 1);//mock
+    DisplacmentGradientSystemReplace beam_case2(nu, depth, phi, kappa, exit_point_coordinate, segment_lenght, burgers_vector, 2);//mock
+    object_vector_case2.push_back(angular90_case2);
+    object_vector_case2.push_back(angular_case2);
+    object_vector_case2.push_back(beam_case2);
+    half_angle = new Model_Of_Polygonal_Dislocation(object_vector_case2);
+    uxx_expected = 1.68217e-05;
+    uxy_expected = -0.000268631;
+    uxz_expected = -6.24736e-05;
+    uyx_expected = -2.7032e-05;
+    uyy_expected = 4.97022e-06;
+    uyz_expected = -8.25934e-05;
+    uzx_expected = 3.02494e-05;
+    uzy_expected = -0.000421473;
+    uzz_expected = 0.00011877;
+    ASSERT_NEAR(half_angle->uxxcalc(x, y, z), uxx_expected, precision);
+    ASSERT_NEAR(half_angle->uxycalc(x, y, z), uxy_expected, precision);
+    ASSERT_NEAR(half_angle->uxzcalc(x, y, z), uxz_expected, precision);
+    ASSERT_NEAR(half_angle->uyxcalc(x, y, z), uyx_expected, precision);
+    ASSERT_NEAR(half_angle->uyycalc(x, y, z), uyy_expected, precision);
+    ASSERT_NEAR(half_angle->uyzcalc(x, y, z), uyz_expected, precision);
+    ASSERT_NEAR(half_angle->uzxcalc(x, y, z), uzx_expected, precision);
+    ASSERT_NEAR(half_angle->uzycalc(x, y, z), uzy_expected, precision);
+    ASSERT_NEAR(half_angle->uzzcalc(x, y, z), uzz_expected, precision);
+}
+
 int main(int argc, char * argv[]) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
