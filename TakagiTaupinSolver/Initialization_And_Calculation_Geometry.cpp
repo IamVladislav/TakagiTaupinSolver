@@ -27,9 +27,10 @@ InitialisationGeometry::InitialisationGeometry(Vector<double> diffraction_vector
     this->dislocation_depth=dislocation_depth;
     Angle_Between_Dislocation_Axis_And_Calculation_Axis(direction_vector_list);
     Exit_Point_Coordinate(direction_vector_list, segment_lenght);
-    Model_Creation(direction_vector_list, segment_lenght, type_list);
+    Segment_Lenght(segment_lenght);
+    Model_Creation(direction_vector_list, type_list);
 }
-void InitialisationGeometry::Model_Creation(std::vector <Vector<double>> direction_vector_list, std::vector <double> segment_lenght, std::vector <int> type_list){
+void InitialisationGeometry::Model_Creation(std::vector <Vector<double>> direction_vector_list, std::vector <int> type_list){
     for(int i=0;i<direction_vector_list.size();i++){
         DisplacmentGradientSystemReplace object(this->nu, this->dislocation_depth[i], this->phi[i], this->kappa[i], this->exit_point[i], segment_lenght[i], this->b_vector, type_list[i]);
         final_model.push_back(object);
@@ -75,8 +76,8 @@ void InitialisationGeometry::Exit_Point_Coordinate(std::vector <Vector<double>> 
     {
         exit_point_calculation.c[2]=-dislocation_depth[i];
         if(kappa[i]>=(-0.01*PI_2) && kappa[i]<=(+0.01*PI_2)){
-            exit_point_calculation.c[0]=(segment_lenght[i])*cos(phi[i]);
-            exit_point_calculation.c[1]=(segment_lenght[i])*sin(phi[i]);
+            exit_point_calculation.c[0]=0;
+            exit_point_calculation.c[1]=0;
         }
         else{
             if(kappa[i]>=(PI_2-0.005*PI_2) && kappa[i]<=(PI_2+0.005*PI_2)){
@@ -84,8 +85,8 @@ void InitialisationGeometry::Exit_Point_Coordinate(std::vector <Vector<double>> 
                 exit_point_calculation.c[1]=INF;
             }
             else{
-                exit_point_calculation.c[0]=-(dislocation_depth[i]*tan(kappa[i])+segment_lenght[i])*cos(phi[i]);
-                exit_point_calculation.c[1]=-(dislocation_depth[i]*tan(kappa[i])+segment_lenght[i])*sin(phi[i]);
+                exit_point_calculation.c[0]=-dislocation_depth[i]*tan(kappa[i])*cos(phi[i]);
+                exit_point_calculation.c[1]=-dislocation_depth[i]*tan(kappa[i])*sin(phi[i]);
             }
         }
         exit_point.push_back(exit_point_calculation);
@@ -135,5 +136,33 @@ template <typename type> bool InitialisationGeometry::is_Right_Normal(Vector<typ
     }
     else{
         return false;
+    }
+}
+void InitialisationGeometry::Segment_Lenght(std::vector <double> segment_lenght){
+    Vector<double> zeros;
+    zeros.c[0]=0;
+    zeros.c[1]=0;
+    zeros.c[2]=0;
+    for(int i=0;i<segment_lenght.size();i++){
+        this->segment_lenght.push_back(zeros);
+    }
+    std::vector <int> parallel_segment_number;
+    std::vector <int> matcher;
+    for(int i=0;i<segment_lenght.size();i++){
+        if (exit_point[i].c[0] == INF && exit_point[i].c[1] == INF){
+            parallel_segment_number.push_back(i);
+        }
+    }
+    for(int i=0;i<parallel_segment_number.size();i++){
+        this->segment_lenght[parallel_segment_number[i]].c[0]=-segment_lenght[parallel_segment_number[i]]*cos(phi[parallel_segment_number[i]]);
+        this->segment_lenght[parallel_segment_number[i]].c[1]=-segment_lenght[parallel_segment_number[i]]*sin(phi[parallel_segment_number[i]]);
+    }
+    for(int i=0;i<segment_lenght.size();i++){
+        for(int p=0;p<parallel_segment_number.size();p++){
+            if(segment_lenght[parallel_segment_number[p]]==segment_lenght[i]){
+                this->segment_lenght[i].c[0]=this->segment_lenght[parallel_segment_number[p]].c[0];
+                this->segment_lenght[i].c[1]=this->segment_lenght[parallel_segment_number[p]].c[1];
+            }
+        }
     }
 }

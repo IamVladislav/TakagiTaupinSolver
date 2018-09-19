@@ -28,41 +28,42 @@ int main(int argc, const char * argv[]) {
     //Vector of tay-vectors:
     std::vector <Vector<double>> tay_vector;
     Vector<double> tay_1;
-    tay_1.c[0]=-1;
+    tay_1.c[0]=0;
     tay_1.c[1]=-1;
-    tay_1.c[2]=0;
+    tay_1.c[2]=1;
     tay_vector.push_back(tay_1);
     Vector<double> tay_2;
-    tay_2.c[0]=-1;
-    tay_2.c[1]=-1;
-    tay_2.c[2]=0;
+    tay_2.c[0]=1;
+    tay_2.c[1]=0;
+    tay_2.c[2]=1;
     tay_vector.push_back(tay_2);
     Vector<double> tay_3;
-    tay_3.c[0]=0;
-    tay_3.c[1]=-1;
+    tay_3.c[0]=1;
+    tay_3.c[1]=0;
     tay_3.c[2]=1;
     tay_vector.push_back(tay_3);
     //Burger's vectorof dislocation:
     Vector<double> burgers_vector;
-    burgers_vector.c[0]=1;
-    burgers_vector.c[1]=0;
+    burgers_vector.c[0]=0;
+    burgers_vector.c[1]=-1;
     burgers_vector.c[2]=1;
     //Number of dislocation in one place:
     int number_of_dislocation=1;
     //Dislocation depth:
-    std::vector<double> dislocation_depth;
-    dislocation_depth.push_back(150);
-    dislocation_depth.push_back(150);
-    dislocation_depth.push_back(150);
-    //Segment lengt (thi first and second position must be zeros! If the dislocation have more, then to segments, then add into third position a value of mid segment lenght)
+    std::vector <double> dislocation_depth;
+    dislocation_depth.push_back(15);
+    dislocation_depth.push_back(15);
+    dislocation_depth.push_back(15);
+    //Segment lengt
     std::vector<double> segment_lenght;
-    segment_lenght.push_back(0);
-    segment_lenght.push_back(0);
-    segment_lenght.push_back(0);
+    segment_lenght.push_back(-20);
+    segment_lenght.push_back(-20);
+    segment_lenght.push_back(-20);
     //Nu
     double nu=0.4;
-    //Type list
+    //Type_vector
     std::vector<int> type_list;
+    type_list.push_back(1);
     type_list.push_back(1);
     type_list.push_back(2);
     type_list.push_back(1);

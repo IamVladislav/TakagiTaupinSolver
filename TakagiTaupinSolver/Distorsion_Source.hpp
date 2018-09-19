@@ -54,7 +54,6 @@ public:
 
 class AngularDislocation: public DisplacmentGradient{
 public:
-    Parallel_Shfit *parallel_shift;
     AngularDislocation(double nu, double kappa, double dislocation_depth, Vector<double> exit_point_coordinate, double segment_lenght, Vector<double> burgers_vector);
     double uxxcalc(double x, double y, double z);
     double uxycalc(double x, double y, double z);
@@ -72,9 +71,10 @@ public:
     Rotation_Matrix_Z *rotate;
     Rotation_Matrix_Z_Vector *rotate_vector;
     DisplacmentGradient *distortion_gradients;
+    Parallel_Shfit *parallel_shift;
     Vector<double> exit_point_coordinate;
-    double phi, segment_lenght;
-    DisplacmentGradientSystemReplace(double nu, double depth, double phi, double kappa, Vector<double> exit_point_coordinate, double segment_lenght, Vector<double> burgers_vector, int type);
+    double phi;
+    DisplacmentGradientSystemReplace(double nu, double depth, double phi, double kappa, Vector<double> exit_point_coordinate, Vector <double> segment_lenght, Vector<double> burgers_vector, int type);
     double uxxcalc(double x, double y, double z);
     double uxycalc(double x, double y, double z);
     double uxzcalc(double x, double y, double z);
