@@ -109,12 +109,12 @@ int main(int argc, const char * argv[]) {
     x=x_min;
     y=y_min;
     std::ofstream fout;
-    fout.open("Distribution_of_uxz");
+    fout.open("Distribution_of_uzz");
     for(int i=0;i<i_max;i++){
         x=x+x_step;
         for(int k=0;k<k_max;k++){
             y=y+y_step;
-            fout << model_obj->uyxcalc(x, y, 0) << std::endl;
+            fout << model_obj->uzzcalc(x, y, 0) << std::endl;
         }
         y=y_min;
     }
