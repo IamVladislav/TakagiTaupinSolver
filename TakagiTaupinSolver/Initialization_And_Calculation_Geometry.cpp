@@ -37,6 +37,12 @@ void InitialisationGeometry::Model_Creation(std::vector <Vector<double>> directi
     final_model.push_back(object_2);
     DisplacmentGradientSystemReplace object_3(this->nu, this->dislocation_depth[2], this->phi[2], this->kappa[2], this->exit_point[2], segment_lenght[2], this->b_vector, type_list[2]);
     final_model.push_back(object_3);
+    DisplacmentGradientSystemReplace object_4(this->nu, this->dislocation_depth[3], this->phi[3], this->kappa[3], this->exit_point[3], segment_lenght[3], Vector_Inverse(this->b_vector), type_list[3]);
+    final_model.push_back(object_4);
+    DisplacmentGradientSystemReplace object_5(this->nu, this->dislocation_depth[4], this->phi[4], this->kappa[4], this->exit_point[4], segment_lenght[4], this->b_vector, type_list[4]);
+    final_model.push_back(object_5);
+    DisplacmentGradientSystemReplace object_6(this->nu, this->dislocation_depth[5], this->phi[5], this->kappa[5], this->exit_point[5], segment_lenght[5], Vector_Inverse(this->b_vector), type_list[5]);
+    final_model.push_back(object_6);
 }
 Model_Of_Polygonal_Dislocation* InitialisationGeometry::ModelOutput(){//mock?
     Model_Of_Polygonal_Dislocation* model = new Model_Of_Polygonal_Dislocation(final_model);
