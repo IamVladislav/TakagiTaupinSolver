@@ -13,6 +13,7 @@
 #include "System_Repclacement_Library.hpp"
 #include "Distorsion_Source.hpp"
 #include "Initialization_And_Calculation_Geometry.hpp"
+#include <fstream>
 
 int main(int argc, const char * argv[]) {
     //Diffraction vector:
@@ -28,18 +29,18 @@ int main(int argc, const char * argv[]) {
     //Vector of tay-vectors:
     std::vector <Vector<double>> tay_vector;
     Vector<double> tay_1;
-    tay_1.c[0]=0;
+    tay_1.c[0]=-1;
     tay_1.c[1]=-1;
-    tay_1.c[2]=1;
+    tay_1.c[2]=0;
     tay_vector.push_back(tay_1);
     Vector<double> tay_2;
-    tay_2.c[0]=1;
-    tay_2.c[1]=0;
-    tay_2.c[2]=1;
+    tay_2.c[0]=-1;
+    tay_2.c[1]=-1;
+    tay_2.c[2]=0;
     tay_vector.push_back(tay_2);
     Vector<double> tay_3;
-    tay_3.c[0]=1;
-    tay_3.c[1]=0;
+    tay_3.c[0]=0;
+    tay_3.c[1]=-1;
     tay_3.c[2]=1;
     tay_vector.push_back(tay_3);
     //Burger's vectorof dislocation:
@@ -56,14 +57,13 @@ int main(int argc, const char * argv[]) {
     dislocation_depth.push_back(15);
     //Segment lengt
     std::vector<double> segment_lenght;
-    segment_lenght.push_back(-20);
-    segment_lenght.push_back(-20);
-    segment_lenght.push_back(-20);
+    segment_lenght.push_back(0);
+    segment_lenght.push_back(0);
+    segment_lenght.push_back(0);
     //Nu
     double nu=0.4;
     //Type_vector
     std::vector<int> type_list;
-    type_list.push_back(1);
     type_list.push_back(1);
     type_list.push_back(2);
     type_list.push_back(1);
@@ -76,20 +76,24 @@ int main(int argc, const char * argv[]) {
     double x_min, x_max, y_min, y_max, x, y, z, x_step, y_step;
     i_max=1000;
     k_max=1000;
-    x_min=-400.1;
-    x_max=399.9;
-    y_min=-400.1;
-    y_max=399.9;
+    x_min=-40.01;
+    x_max=39.99;
+    y_min=-40.01;
+    y_max=39.99;
     x_step=(x_max-x_min)/i_max;
     y_step=(y_max-y_min)/k_max;
-    x=0;
-    y=0;
+    x=x_min;
+    y=y_min;
+    std::ofstream fout;
+    fout.open("Distribution_of_uxz");
     for(int i=0;i<i_max;i++){
         x=x+x_step;
-        for(int k=0;k<=k_max;k++){
+        for(int k=0;k<k_max;k++){
             y=y+y_step;
-            std::cout << model_obj->uxxcalc(x, y, 0) << std::endl;
+            fout << model_obj->uxxcalc(x, y, 0) << std::endl;
         }
+        y=y_min;
     }
+    fout.close();
     return 0;
 }

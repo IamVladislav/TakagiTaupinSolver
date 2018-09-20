@@ -31,10 +31,12 @@ InitialisationGeometry::InitialisationGeometry(Vector<double> diffraction_vector
     Model_Creation(direction_vector_list, type_list);
 }
 void InitialisationGeometry::Model_Creation(std::vector <Vector<double>> direction_vector_list, std::vector <int> type_list){
-    for(int i=0;i<direction_vector_list.size();i++){
-        DisplacmentGradientSystemReplace object(this->nu, this->dislocation_depth[i], this->phi[i], this->kappa[i], this->exit_point[i], segment_lenght[i], this->b_vector, type_list[i]);
-        final_model.push_back(object);
-    }
+    DisplacmentGradientSystemReplace object_1(this->nu, this->dislocation_depth[0], this->phi[0], this->kappa[0], this->exit_point[0], segment_lenght[0], Vector_Inverse(this->b_vector), type_list[0]);
+        final_model.push_back(object_1);
+    DisplacmentGradientSystemReplace object_2(this->nu, this->dislocation_depth[1], this->phi[1], this->kappa[1], this->exit_point[1], segment_lenght[1], this->b_vector, type_list[1]);
+    final_model.push_back(object_2);
+    DisplacmentGradientSystemReplace object_3(this->nu, this->dislocation_depth[2], this->phi[2], this->kappa[2], this->exit_point[2], segment_lenght[2], this->b_vector, type_list[2]);
+    final_model.push_back(object_3);
 }
 Model_Of_Polygonal_Dislocation* InitialisationGeometry::ModelOutput(){//mock?
     Model_Of_Polygonal_Dislocation* model = new Model_Of_Polygonal_Dislocation(final_model);
