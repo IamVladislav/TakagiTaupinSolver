@@ -78,9 +78,9 @@ int main(int argc, const char * argv[]) {
     segment_lenght.push_back(0);
     segment_lenght.push_back(0);
     segment_lenght.push_back(0);
-    segment_lenght.push_back(-40);
-    segment_lenght.push_back(-40);
-    segment_lenght.push_back(-40);
+    segment_lenght.push_back(-20);
+    segment_lenght.push_back(-20);
+    segment_lenght.push_back(-20);
     //Nu
     double nu=0.4;
     //Type_vector
@@ -100,21 +100,21 @@ int main(int argc, const char * argv[]) {
     double x_min, x_max, y_min, y_max, x, y, z, x_step, y_step;
     i_max=1000;
     k_max=1000;
-    x_min=-20.01;
-    x_max=59.99;
-    y_min=-30.01;
-    y_max=59.99;
+    x_min=-40.01;
+    x_max=39.99;
+    y_min=-40.01;
+    y_max=39.99;
     x_step=(x_max-x_min)/i_max;
     y_step=(y_max-y_min)/k_max;
     x=x_min;
     y=y_min;
     std::ofstream fout;
-    fout.open("Distribution_of_uzz");
+    fout.open("Distribution_of_ANG");
     for(int i=0;i<i_max;i++){
         x=x+x_step;
         for(int k=0;k<k_max;k++){
             y=y+y_step;
-            fout << model_obj->uzzcalc(x, y, 0) << std::endl;
+            fout << (cos(0.185771) * model_obj->uxxcalc(x, y, 0) - sin(0.185771) * model_obj->uxxcalc(x, y, 0)) * 36.3 << std::endl;
         }
         y=y_min;
     }
